@@ -14,20 +14,52 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  name      String?
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Message   Message[]
+  id            Int                @id @default(autoincrement())
+  email         String             @unique
+  name          String
+  password      String
+  phone_number  String?
+  created_at    DateTime           @default(now())
+  updated_at    DateTime           @updatedAt
+  messages      Message[]
+  conversations ConversationUser[]
+
+  @@map("users")
 }
 
 model Message {
-  id        String   @id @default(cuid())
-  text      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  id              String       @id @default(cuid())
+  content         String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  sender_id       Int
+  sent_at         DateTime
+  user            User         @relation(fields: [sender_id], references: [id])
+  conversation    Conversation @relation(fields: [conversation_id], references: [id])
+  conversation_id String
+  type            String
+
+  @@map("messages")
+}
+
+model Conversation {
+  id        String             @id @default(cuid())
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  messages  Message[]
+  is_group  Boolean
+  users     ConversationUser[]
+
+  @@map("conversations")
+}
+
+model ConversationUser {
+  id              Int          @id @default(autoincrement())
+  user_id         Int
+  conversation_id String
+  joined_at       DateTime     @default(now())
+  user            User         @relation(fields: [user_id], references: [id])
+  conversation    Conversation @relation(fields: [conversation_id], references: [id])
+
+  @@map("conversation_users")
 }
