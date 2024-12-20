@@ -21,8 +21,11 @@ model User {
   phone_number  String?
   created_at    DateTime           @default(now())
   updated_at    DateTime           @updatedAt
+  type          String             @default("user")
   messages      Message[]
   conversations ConversationUser[]
+  companies     Companies?         @relation(fields: [company_id], references: [id])
+  company_id    Int?
 
   @@map("users")
 }
@@ -32,9 +35,9 @@ model Message {
   content         String
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
-  sender_id       Int
+  user_id         Int
   sent_at         DateTime
-  user            User         @relation(fields: [sender_id], references: [id])
+  user            User         @relation(fields: [user_id], references: [id])
   conversation    Conversation @relation(fields: [conversation_id], references: [id])
   conversation_id String
   type            String
@@ -62,4 +65,28 @@ model ConversationUser {
   conversation    Conversation @relation(fields: [conversation_id], references: [id])
 
   @@map("conversation_users")
+}
+
+model Companies {
+  id         Int            @id @default(autoincrement())
+  name       String
+  email      String
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+  document   String
+  users      User[]
+  phones     CompanyPhone[]
+
+  @@map("companies")
+}
+
+model CompanyPhone {
+  id           Int       @id @default(autoincrement())
+  phone_number String
+  company_id   Int
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  company      Companies @relation(fields: [company_id], references: [id])
+
+  @@map("company_phones")
 }
