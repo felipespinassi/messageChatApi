@@ -88,5 +88,5 @@ model CompanyPhone {
   updated_at   DateTime  @updatedAt
   company      Companies @relation(fields: [company_id], references: [id])
 
-  @@map("company_phones")
+  @@map("company_phone")
 }
