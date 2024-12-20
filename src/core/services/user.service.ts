@@ -8,4 +8,8 @@ export class UserService {
   async createUser(user): Promise<string> {
     return await this.userRepository.create(user);
   }
+
+  async findAll(): Promise<string> {
+    return await this.userRepository.findAll();
+  }
 }

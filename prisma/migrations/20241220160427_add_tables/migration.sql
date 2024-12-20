@@ -60,14 +60,14 @@ CREATE TABLE "companies" (
 );
 
 -- CreateTable
-CREATE TABLE "company_phones" (
+CREATE TABLE "company_phone" (
     "id" SERIAL NOT NULL,
     "phone_number" TEXT NOT NULL,
     "company_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "company_phones_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "company_phone_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -89,4 +89,4 @@ ALTER TABLE "conversation_users" ADD CONSTRAINT "conversation_users_user_id_fkey
 ALTER TABLE "conversation_users" ADD CONSTRAINT "conversation_users_conversation_id_fkey" FOREIGN KEY ("conversation_id") REFERENCES "conversations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "company_phones" ADD CONSTRAINT "company_phones_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "company_phone" ADD CONSTRAINT "company_phone_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "companies"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

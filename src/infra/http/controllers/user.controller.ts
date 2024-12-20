@@ -9,4 +9,9 @@ export class UserController {
   async createUser(@Body() user): Promise<string> {
     return this.userService.createUser(user);
   }
+
+  @Get()
+  async FindAll(): Promise<string> {
+    return this.userService.findAll();
+  }
 }

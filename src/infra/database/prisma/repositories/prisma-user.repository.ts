@@ -11,4 +11,8 @@ export class PrismaUserRepository implements UserRepository {
       data: user,
     });
   }
+
+  findAll(): Promise<any | null> {
+    return this.prismaService.user.findMany();
+  }
 }
