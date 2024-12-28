@@ -15,7 +15,7 @@ export class PrismaUserRepository implements UserRepository {
   findAll(): Promise<any | null> {
     return this.prismaService.user.findMany();
   }
-  findOne(email: string): Promise<any | null> {
+  findOneByEmail(email: string): Promise<any | null> {
     return this.prismaService.user.findUnique({
       where: {
         email: email,

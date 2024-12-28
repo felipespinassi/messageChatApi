@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { UserRepository } from "../repositories/user.repository";
-import { CreateUserDto } from "../dtos/create-user.dto";
 import { User } from "../entities/user";
+import { CreateUserDto } from "../dtos/user/create-user.dto";
 
 @Injectable()
 export class UserService {
@@ -27,7 +27,8 @@ export class UserService {
     return await this.userRepository.findAll();
   }
 
-  async findOne(username: string): Promise<string> {
-    return await this.userRepository.findOne(username);
+  async findOneByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOneByEmail(email);
+    return user;
   }
 }
