@@ -11,15 +11,12 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService
   ) {}
-  saltOrRounds = 10;
 
   async signIn(SigninDto: SignInDto): Promise<{ access_token: string }> {
     const { email, password } = SigninDto;
 
     const user = await this.userService.findOneByEmail(email);
     const isMatch = await bcrypt.compare(password, user.password);
-
-    console.log(isMatch);
 
     if (!isMatch) {
       throw new UnauthorizedException();
@@ -35,16 +32,5 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
-  }
-
-  async signUp(payload: CreateUserDto) {
-    const hashPass = await bcrypt.hash(payload.password, this.saltOrRounds);
-
-    let data = {
-      ...payload,
-      password: hashPass,
-    };
-
-    return data;
   }
 }

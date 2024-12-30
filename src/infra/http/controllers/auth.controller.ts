@@ -13,9 +13,4 @@ export class AuthController {
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
   }
-
-  @Post("sign-up")
-  signUp(@Body() payload) {
-    return this.authService.signUp(payload);
-  }
 }
