@@ -14,7 +14,17 @@ export class AuthService {
     const { email, password } = SigninDto;
     const user = await this.userService.findOneByEmail(email);
 
-    const payload = { sub: user.id, name: user.name };
+    if (user.password !== password) {
+      throw new UnauthorizedException();
+    }
+
+    const payload = {
+      sub: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    };
+
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

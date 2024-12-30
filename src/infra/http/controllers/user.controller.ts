@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { UserService } from "src/core/services/user.service";
 import { CreateUserDto, createUserSchema } from "../dtos/user/create-user.dto";
 import { ZodValidationPipe } from "../validators/zod-validation.pipe";
