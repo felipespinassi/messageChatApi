@@ -7,6 +7,7 @@ import { AuthService } from "src/core/services/auth.service";
 import { JwtModule } from "@nestjs/jwt";
 import { APP_GUARD } from "@nestjs/core";
 import { AuthGuard } from "./guard/auth.guard";
+import { ChatGateway } from "./gateways/chat.gateway";
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthGuard } from "./guard/auth.guard";
     UserService,
     AuthService,
     { provide: APP_GUARD, useClass: AuthGuard },
+    ChatGateway,
   ],
   exports: [],
 })
