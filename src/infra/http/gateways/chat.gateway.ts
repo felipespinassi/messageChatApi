@@ -1,5 +1,6 @@
 import { Logger } from "@nestjs/common";
 import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -9,7 +10,7 @@ import {
   WebSocketServer,
 } from "@nestjs/websockets";
 
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 
 @WebSocketGateway({
   cors: {
@@ -23,25 +24,46 @@ export class ChatGateway
 
   @WebSocketServer() server: Server;
 
-  afterInit() {
+  afterInit(server: Server) {
     this.logger.log("Initialized");
   }
 
-  handleConnection(client: any, ...args: any[]) {
-    const { sockets } = this.server.sockets;
-
+  handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client id: ${client.id} connected`);
-    this.logger.debug(`Number of connected clients: ${sockets.size}`);
   }
 
-  handleDisconnect(client: any) {
-    this.logger.log(`Cliend id:${client.id} disconnected`);
+  handleDisconnect(client: Socket) {
+    this.logger.log(`Client id: ${client.id} disconnected`);
   }
 
   @SubscribeMessage("newMessage")
-  handleMessage(@MessageBody() body: string) {
-    console.log(body);
+  handleMessage(
+    @MessageBody() data: { room: string; message: string },
+    @ConnectedSocket() client: Socket
+  ) {
+    this.logger.log(
+      `Message: ${data.message} from client id: ${client.id} to room: ${data.room}`
+    );
+    this.server.to(data.room).emit("onMessage", { msg: data });
+  }
 
-    this.server.emit("onMessage", { msg: body });
+  @SubscribeMessage("joinRoom")
+  handleJoinRoom(
+    @MessageBody() room: string,
+    @ConnectedSocket() client: Socket
+  ) {
+    client.join(room);
+    client.emit("joinedRoom", room);
+    this.logger.log(`Client id: ${client.id} joined room: ${room}`);
+  }
+
+  @SubscribeMessage("leaveRoom")
+  handleLeaveRoom(
+    @MessageBody() room: string,
+    @ConnectedSocket() client: Socket
+  ) {
+    client.leave(room);
+    client.emit("leftRoom", room);
+    this.logger.log(`Client id: ${client.id} left room: ${room}`);
   }
 }
