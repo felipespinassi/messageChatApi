@@ -11,7 +11,11 @@ import {
 
 import { Server } from "socket.io";
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: "*",
+  },
+})
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -37,6 +41,7 @@ export class ChatGateway
   @SubscribeMessage("newMessage")
   handleMessage(@MessageBody() body: string) {
     console.log(body);
-    this.server.emit("onMessage", "retorno da mensagem");
+
+    this.server.emit("onMessage", { msg: body });
   }
 }
