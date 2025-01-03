@@ -22,4 +22,11 @@ export class PrismaUserRepository implements UserRepository {
       },
     });
   }
+  findOneById(id: string): Promise<any | null> {
+    return this.prismaService.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+  }
 }
