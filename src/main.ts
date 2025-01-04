@@ -9,10 +9,11 @@ async function bootstrap() {
     .setTitle("chat API")
     .setDescription("API for chat application")
     .setVersion("1.0")
-    .addTag("cats")
+    .addTag("chat")
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, documentFactory);
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

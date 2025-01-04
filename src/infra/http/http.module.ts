@@ -8,6 +8,8 @@ import { JwtModule } from "@nestjs/jwt";
 import { APP_GUARD } from "@nestjs/core";
 import { AuthGuard } from "./guard/auth.guard";
 import { ChatGateway } from "./gateways/chat.gateway";
+import { ConversationController } from "./controllers/conversation.controller";
+import { ConversationService } from "src/core/services/conversation.service";
 
 @Module({
   imports: [
@@ -17,10 +19,11 @@ import { ChatGateway } from "./gateways/chat.gateway";
       secret: process.env.JWT_SECRET,
     }),
   ],
-  controllers: [UserController, AuthController],
+  controllers: [UserController, AuthController, ConversationController],
   providers: [
     UserService,
     AuthService,
+    ConversationService,
     { provide: APP_GUARD, useClass: AuthGuard },
     ChatGateway,
   ],
