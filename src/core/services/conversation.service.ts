@@ -3,14 +3,16 @@ import { UserRepository } from "../repositories/user.repository";
 import { CreateConversationDto } from "../dtos/conversation/create-conversation.dto";
 import { ConversationRepository } from "../repositories/conversation.repository";
 import { Conversation } from "../entities/conversation";
+import { ConversationUserService } from "./conversationUser.service";
 
 @Injectable()
 export class ConversationService {
-  constructor(private conversationRepository: ConversationRepository) {}
+  constructor(
+    private conversationRepository: ConversationRepository,
+    private conversationUserService: ConversationUserService
+  ) {}
 
-  async createConversation(
-    createConversationDto: CreateConversationDto
-  ): Promise<Conversation> {
+  async createConversation(createConversationDto: any): Promise<any> {
     const conversation = new Conversation();
 
     conversation.is_group = createConversationDto.is_group;
@@ -22,7 +24,14 @@ export class ConversationService {
     if (!newConversation) {
       throw new ConflictException("Conflito ao criar nova conversa");
     }
-    return newConversation;
+
+    const conversationUser =
+      await this.conversationUserService.createConversation({
+        user_id: createConversationDto.user_id,
+        conversation_id: newConversation.id,
+      });
+
+    return { conversationUser, newConversation };
   }
 
   //   async findAll(): Promise<string> {

@@ -4,6 +4,8 @@ import { PrismaUserRepository } from "./prisma/repositories/prisma-user.reposito
 import { PrismaService } from "./prisma/prisma.service";
 import { PrismaConversationRepository } from "./prisma/repositories/prisma-conversation-repository";
 import { ConversationRepository } from "src/core/repositories/conversation.repository";
+import { ConversationUserRepository } from "src/core/repositories/conversationUser.repository";
+import { PrismaConversationUserRepository } from "./prisma/repositories/prisma-conversation-user.repository";
 
 @Module({
   providers: [
@@ -16,7 +18,11 @@ import { ConversationRepository } from "src/core/repositories/conversation.repos
       provide: ConversationRepository,
       useClass: PrismaConversationRepository,
     },
+    {
+      provide: ConversationUserRepository,
+      useClass: PrismaConversationUserRepository,
+    },
   ],
-  exports: [UserRepository, ConversationRepository],
+  exports: [UserRepository, ConversationRepository, ConversationUserRepository],
 })
 export class DatabaseModule {}

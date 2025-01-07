@@ -10,6 +10,7 @@ import { AuthGuard } from "./guard/auth.guard";
 import { ChatGateway } from "./gateways/chat.gateway";
 import { ConversationController } from "./controllers/conversation.controller";
 import { ConversationService } from "src/core/services/conversation.service";
+import { ConversationUserService } from "src/core/services/conversationUser.service";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ConversationService } from "src/core/services/conversation.service";
     UserService,
     AuthService,
     ConversationService,
+    ConversationUserService,
     { provide: APP_GUARD, useClass: AuthGuard },
     ChatGateway,
   ],

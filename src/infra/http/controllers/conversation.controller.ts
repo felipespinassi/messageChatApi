@@ -10,6 +10,7 @@ import {
 import { CreateUserDto } from "../dtos/user/create-user.dto";
 import { Public } from "../decorators/public.decorator";
 import { ConversationService } from "src/core/services/conversation.service";
+import { ConversationUserService } from "src/core/services/conversationUser.service";
 
 @Controller("/conversation")
 export class ConversationController {
@@ -17,7 +18,7 @@ export class ConversationController {
 
   @Public()
   @Post()
-  async createUser(@Body() createConversationDto: any) {
+  async createConversation(@Body() createConversationDto: any) {
     const newConversation = await this.conversationService.createConversation(
       createConversationDto
     );
