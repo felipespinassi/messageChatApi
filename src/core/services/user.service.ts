@@ -29,8 +29,13 @@ export class UserService {
     return newUser;
   }
 
-  async findAll(): Promise<string> {
-    return await this.userRepository.findAll();
+  async findAll(): Promise<User[]> {
+    const users = await this.userRepository.findAll();
+
+    if (!users) {
+      throw new ConflictException("Nenhum usuário encontrado");
+    }
+    return users;
   }
 
   async findOneByEmail(email: string): Promise<User> {
@@ -38,7 +43,7 @@ export class UserService {
     return user;
   }
 
-  async findOneById(id: string): Promise<User> {
+  async findOneById(id: number): Promise<User> {
     const user = await this.userRepository.findOneById(id);
     return user;
   }

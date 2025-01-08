@@ -1,7 +1,8 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from "@nestjs/common";
 import { AuthService } from "src/core/services/auth.service";
-import { SignInDto } from "../dtos/auth/sign-in.dto";
+import { SignInDto, signInSchema } from "../dtos/auth/sign-in.dto";
 import { Public } from "../decorators/public.decorator";
+import { ZodValidationPipe } from "../validators/zod-validation.pipe";
 
 @Controller("auth")
 export class AuthController {
@@ -10,7 +11,7 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post()
-  signIn(@Body() signInDto: SignInDto) {
+  signIn(@Body(new ZodValidationPipe(signInSchema)) signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
   }
 }
