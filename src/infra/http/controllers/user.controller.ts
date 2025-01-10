@@ -26,7 +26,6 @@ export class UserController {
     return new UserDto(newUser.id, newUser.name, newUser.email);
   }
 
-  @Public()
   @Get()
   async findAll() {
     const users = await this.userService.findAll();
