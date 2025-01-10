@@ -26,6 +26,7 @@ export class UserController {
     return new UserDto(newUser.id, newUser.name, newUser.email);
   }
 
+  @Public()
   @Get()
   async findAll() {
     const users = await this.userService.findAll();
@@ -36,7 +37,6 @@ export class UserController {
 
     return usersDto;
   }
-
   @Get(":id")
   async findOneById(@Param("id", ParseIntPipe) id: number) {
     const user = await this.userService.findOneById(id);
