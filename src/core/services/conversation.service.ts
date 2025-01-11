@@ -4,6 +4,7 @@ import { CreateConversationDto } from "../dtos/conversation/create-conversation.
 import { ConversationRepository } from "../repositories/conversation.repository";
 import { Conversation } from "../entities/conversation";
 import { ConversationUserService } from "./conversationUser.service";
+import { MessageService } from "./message.service";
 
 @Injectable()
 export class ConversationService {
@@ -43,8 +44,8 @@ export class ConversationService {
   //     return user;
   //   }
 
-  //   async findOneById(id: string): Promise<User> {
-  //     const user = await this.userRepository.findOneById(id);
-  //     return user;
-  //   }
+  async findOneById(id: string): Promise<any> {
+    const conversation = await this.conversationRepository.findOneById(id);
+    return conversation;
+  }
 }

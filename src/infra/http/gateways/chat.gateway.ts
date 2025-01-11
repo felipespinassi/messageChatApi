@@ -11,6 +11,7 @@ import {
 } from "@nestjs/websockets";
 
 import { Server, Socket } from "socket.io";
+import { MessageService } from "src/core/services/message.service";
 
 @WebSocketGateway({
   cors: {
@@ -21,6 +22,7 @@ export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   private readonly logger = new Logger(ChatGateway.name);
+  constructor(private messageService: MessageService) {}
 
   @WebSocketServer() server: Server;
 
@@ -37,14 +39,29 @@ export class ChatGateway
   }
 
   @SubscribeMessage("newMessage")
-  handleMessage(
-    @MessageBody() data: { room: string; message: string },
+  async handleMessage(
+    @MessageBody()
+    data: {
+      room: string;
+      content: string;
+      user_id: number;
+      conversation_id: string;
+      type: string;
+    },
     @ConnectedSocket() client: Socket
   ) {
     this.logger.log(
-      `Message: ${data.message} from client id: ${client.id} to room: ${data.room}`
+      `Message: ${data.content} from client id: ${client.id} to room: ${data.room}`
     );
-    this.server.to(data.room).emit("onMessage", { msg: data });
+    const messageDto = {
+      content: data.content,
+      conversation_id: data.conversation_id,
+      user_id: data.user_id,
+      type: data.type,
+    };
+    const newMessage = await this.messageService.createMessage(messageDto);
+
+    this.server.to(data.room).emit("onMessage", { msg: newMessage });
   }
 
   @SubscribeMessage("joinRoom")

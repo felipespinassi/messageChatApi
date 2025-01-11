@@ -31,7 +31,7 @@ export class UserController {
     const users = await this.userService.findAll();
 
     const usersDto = users.map(
-      (user) => new UserDto(user.id, user.name, user.email)
+      (user) => new UserDto(user.id, user.email, user.name)
     );
 
     return usersDto;
@@ -40,7 +40,7 @@ export class UserController {
   async findOneById(@Param("id", ParseIntPipe) id: number) {
     const user = await this.userService.findOneById(id);
 
-    const userDto = new UserDto(user.id, user.name, user.email);
+    const userDto = new UserDto(user.id, user.email, user.name);
     return userDto;
   }
 }

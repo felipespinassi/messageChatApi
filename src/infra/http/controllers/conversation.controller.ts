@@ -36,8 +36,8 @@ export class ConversationController {
     return this.conversationService.findAll(Number(userId));
   }
 
-  //   @Get("/:id")
-  //   async findOneById(@Param() id: { id: string }): Promise<User> {
-  //     return this.userService.findOneById(id.id);
-  //   }
+  @Get("/:id")
+  async findOneById(@Param() id: { id: string }): Promise<any> {
+    return this.conversationService.findOneById(id.id);
+  }
 }

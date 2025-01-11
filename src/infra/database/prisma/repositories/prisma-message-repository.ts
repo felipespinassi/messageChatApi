@@ -6,8 +6,17 @@ import { Message } from "src/core/entities/message";
 
 @Injectable()
 export class PrismaMessageRepository implements MessageRepository {
-  create(entity: Message): Promise<Message | null> {
-    throw new Error("Method not implemented.");
+  constructor(private prismaService: PrismaService) {}
+  create(entity: Message): any {
+    return this.prismaService.message.create({
+      data: {
+        content: entity.content,
+        conversation_id: entity.conversation_id,
+        type: entity.type,
+        user_id: entity.user_id,
+        sent_at: entity.sent_at,
+      },
+    });
   }
   findAll(userId: any) {
     throw new Error("Method not implemented.");
