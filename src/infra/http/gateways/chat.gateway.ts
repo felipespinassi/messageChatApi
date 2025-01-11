@@ -61,7 +61,7 @@ export class ChatGateway
     };
     const newMessage = await this.messageService.createMessage(messageDto);
 
-    this.server.to(data.room).emit("onMessage", { msg: newMessage });
+    this.server.to(data.room).emit("onMessage", newMessage);
   }
 
   @SubscribeMessage("joinRoom")
