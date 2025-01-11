@@ -17,7 +17,6 @@ import { ApiQuery } from "@nestjs/swagger";
 export class ConversationController {
   constructor(private conversationService: ConversationService) {}
 
-  @Public()
   @Post()
   async createConversation(@Body() createConversationDto: any) {
     const newConversation = await this.conversationService.createConversation(

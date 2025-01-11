@@ -11,6 +11,8 @@ import { ChatGateway } from "./gateways/chat.gateway";
 import { ConversationController } from "./controllers/conversation.controller";
 import { ConversationService } from "src/core/services/conversation.service";
 import { ConversationUserService } from "src/core/services/conversationUser.service";
+import { MessageController } from "./controllers/message.controller";
+import { MessageService } from "src/core/services/message.service";
 
 @Module({
   imports: [
@@ -20,12 +22,18 @@ import { ConversationUserService } from "src/core/services/conversationUser.serv
       secret: process.env.JWT_SECRET,
     }),
   ],
-  controllers: [UserController, AuthController, ConversationController],
+  controllers: [
+    UserController,
+    AuthController,
+    ConversationController,
+    MessageController,
+  ],
   providers: [
     UserService,
     AuthService,
     ConversationService,
     ConversationUserService,
+    MessageService,
     { provide: APP_GUARD, useClass: AuthGuard },
     ChatGateway,
   ],
