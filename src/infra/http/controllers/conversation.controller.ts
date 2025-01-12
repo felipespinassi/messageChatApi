@@ -6,19 +6,20 @@ import {
   Post,
   Query,
   UseGuards,
+  ValidationPipe,
 } from "@nestjs/common";
-import { CreateUserDto } from "../dtos/user/create-user.dto";
-import { Public } from "../decorators/public.decorator";
 import { ConversationService } from "src/core/services/conversation.service";
-import { ConversationUserService } from "src/core/services/conversationUser.service";
 import { ApiQuery } from "@nestjs/swagger";
+import { CreateConversationDto } from "../dtos/conversation/create-conversation.dto";
 
 @Controller("/conversation")
 export class ConversationController {
   constructor(private conversationService: ConversationService) {}
 
   @Post()
-  async createConversation(@Body() createConversationDto: any) {
+  async createConversation(
+    @Body(new ValidationPipe()) createConversationDto: CreateConversationDto
+  ) {
     const newConversation = await this.conversationService.createConversation(
       createConversationDto
     );

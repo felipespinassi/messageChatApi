@@ -5,9 +5,10 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  ValidationPipe,
 } from "@nestjs/common";
 import { UserService } from "src/core/services/user.service";
-import { CreateUserDto, createUserSchema } from "../dtos/user/create-user.dto";
+import { CreateUserDto } from "../dtos/user/create-user.dto";
 import { ZodValidationPipe } from "../validators/zod-validation.pipe";
 import { UserDto } from "../dtos/user/user.dto";
 import { Public } from "../decorators/public.decorator";
@@ -18,9 +19,7 @@ export class UserController {
 
   @Public()
   @Post()
-  async createUser(
-    @Body(new ZodValidationPipe(createUserSchema)) createUserDto: CreateUserDto
-  ) {
+  async createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     const newUser = await this.userService.createUser(createUserDto);
 
     return new UserDto(newUser.id, newUser.name, newUser.email);
