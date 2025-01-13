@@ -5,6 +5,7 @@ import {
   Headers,
   Param,
   Post,
+  Query,
   ValidationPipe,
 } from "@nestjs/common";
 import { ConversationService } from "src/core/services/conversation.service";
@@ -27,8 +28,15 @@ export class ConversationController {
   }
 
   @Get()
-  async findAll(@Headers("Authorization") userId): Promise<any> {
-    return this.conversationService.findAll(userId);
+  async findAll(
+    @Headers("Authorization") authHeader,
+    @Query("user") user
+  ): Promise<any> {
+    const dto = {
+      user_id: user,
+      authHeader,
+    };
+    return this.conversationService.findAll(dto);
   }
 
   @Get("/:id")

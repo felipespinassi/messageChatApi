@@ -37,14 +37,17 @@ export class ConversationService {
     return { conversationUser, newConversation };
   }
 
-  async findAll(authHeader): Promise<string> {
+  async findAll(dto): Promise<string> {
+    const { authHeader, user_id } = dto;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       throw new Error("Token não encontrado ou mal formatado");
     }
 
-    const token = authHeader.split(" ")[1]; // Remove o prefixo "Bearer"
-    const user = this.jwtService.decode(token); // Decodifica o token sem verificar a assinatura
-    return await this.conversationRepository.findAll(user.id);
+    const token = authHeader.split(" ")[1];
+    const user = this.jwtService.decode(token);
+
+    const id = Number(user_id) || user.id;
+    return await this.conversationRepository.findAll(id);
   }
 
   async findOneById(id: string): Promise<any> {
