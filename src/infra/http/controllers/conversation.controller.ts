@@ -2,10 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   Param,
   Post,
-  Query,
-  UseGuards,
   ValidationPipe,
 } from "@nestjs/common";
 import { ConversationService } from "src/core/services/conversation.service";
@@ -28,13 +27,8 @@ export class ConversationController {
   }
 
   @Get()
-  @ApiQuery({
-    name: "user",
-    required: false,
-    description: "ID do usuário para filtrar conversas",
-  })
-  async findAll(@Query("user") userId): Promise<string> {
-    return this.conversationService.findAll(Number(userId));
+  async findAll(@Headers("Authorization") userId): Promise<any> {
+    return this.conversationService.findAll(userId);
   }
 
   @Get("/:id")

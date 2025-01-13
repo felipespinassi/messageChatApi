@@ -5,12 +5,14 @@ import { ConversationRepository } from "../repositories/conversation.repository"
 import { Conversation } from "../entities/conversation";
 import { ConversationUserService } from "./conversationUser.service";
 import { MessageService } from "./message.service";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class ConversationService {
   constructor(
     private conversationRepository: ConversationRepository,
-    private conversationUserService: ConversationUserService
+    private conversationUserService: ConversationUserService,
+    private jwtService: JwtService
   ) {}
 
   async createConversation(createConversationDto: any): Promise<any> {
@@ -35,14 +37,15 @@ export class ConversationService {
     return { conversationUser, newConversation };
   }
 
-  async findAll(userId): Promise<string> {
-    return await this.conversationRepository.findAll(userId);
-  }
+  async findAll(authHeader): Promise<string> {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      throw new Error("Token não encontrado ou mal formatado");
+    }
 
-  //   async findOneByEmail(email: string): Promise<User> {
-  //     const user = await this.userRepository.findOneByEmail(email);
-  //     return user;
-  //   }
+    const token = authHeader.split(" ")[1]; // Remove o prefixo "Bearer"
+    const user = this.jwtService.decode(token); // Decodifica o token sem verificar a assinatura
+    return await this.conversationRepository.findAll(user.id);
+  }
 
   async findOneById(id: string): Promise<any> {
     const conversation = await this.conversationRepository.findOneById(id);
