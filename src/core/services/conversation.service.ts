@@ -45,9 +45,13 @@ export class ConversationService {
 
     const token = authHeader.split(" ")[1];
     const user = this.jwtService.decode(token);
-
-    const id = Number(user_id) || user.id;
-    return await this.conversationRepository.findAll(id);
+    if (user.id && user_id) {
+      return await this.conversationRepository.findByUserIds(
+        user.id,
+        Number(user_id)
+      );
+    }
+    return await this.conversationRepository.findAll(user.id);
   }
 
   async findOneById(id: string): Promise<any> {

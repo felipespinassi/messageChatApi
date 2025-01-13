@@ -4,12 +4,12 @@ import {
   Get,
   Headers,
   Param,
+  ParseIntPipe,
   Post,
   Query,
   ValidationPipe,
 } from "@nestjs/common";
 import { ConversationService } from "src/core/services/conversation.service";
-import { ApiQuery } from "@nestjs/swagger";
 import { CreateConversationDto } from "../dtos/conversation/create-conversation.dto";
 
 @Controller("/conversation")
@@ -36,6 +36,7 @@ export class ConversationController {
       user_id: user,
       authHeader,
     };
+
     return this.conversationService.findAll(dto);
   }
 
