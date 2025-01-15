@@ -37,7 +37,7 @@ export class ConversationService {
     return { conversationUser, newConversation };
   }
 
-  async findAll(dto): Promise<string> {
+  async findAll(dto): Promise<{}> {
     const { authHeader, user_id } = dto;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       throw new Error("Token não encontrado ou mal formatado");
@@ -46,12 +46,30 @@ export class ConversationService {
     const token = authHeader.split(" ")[1];
     const user = this.jwtService.decode(token);
     if (user.id && user_id) {
-      return await this.conversationRepository.findByUserIds(
+      const conversation = await this.conversationRepository.findByUserIds(
         user.id,
         Number(user_id)
       );
+
+      return {
+        id: conversation.id,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt,
+        is_group: conversation.is_group,
+        user: conversation.users.find((u) => u.id === Number(user_id)),
+      };
     }
-    return await this.conversationRepository.findAll(user.id);
+    const conversations = await this.conversationRepository.findAll(user.id);
+
+    return conversations.map((conversation) => {
+      return {
+        id: conversation.id,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt,
+        is_group: conversation.is_group,
+        user: conversation.users.find((u) => u.id !== user.id),
+      };
+    });
   }
 
   async findOneById(id: string): Promise<any> {

@@ -50,7 +50,7 @@ export class PrismaConversationRepository implements ConversationRepository {
   }
 
   async findByUserIds(userId1: number, userId2: number): Promise<any> {
-    const conversations = await this.prismaService.conversation.findMany({
+    const conversation = await this.prismaService.conversation.findFirst({
       where: {
         AND: [
           {
@@ -100,10 +100,10 @@ export class PrismaConversationRepository implements ConversationRepository {
       },
     });
 
-    return conversations.map((conversation) => ({
+    return {
       ...conversation,
-      users: conversation.users.map((u) => u.user),
-    }));
+      users: conversation && conversation.users.map((u) => u.user),
+    };
   }
   async findOneById(id: string): Promise<any | null> {
     return await this.prismaService.conversation.findUnique({
