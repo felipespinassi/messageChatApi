@@ -67,6 +67,7 @@ export class ConversationService {
         createdAt: conversation.createdAt,
         updatedAt: conversation.updatedAt,
         is_group: conversation.is_group,
+        messages: conversation.messages,
         user: conversation.users.find((u) => u.id !== user.id),
       };
     });
