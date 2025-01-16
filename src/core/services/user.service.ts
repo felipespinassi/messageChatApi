@@ -40,11 +40,17 @@ export class UserService {
 
   async findOneByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOneByEmail(email);
+    if (!user) {
+      throw new ConflictException("Nenhum usuário encontrado");
+    }
     return user;
   }
 
   async findOneById(id: number): Promise<User> {
     const user = await this.userRepository.findOneById(id);
+    if (!user) {
+      throw new ConflictException("Nenhum usuário encontrado");
+    }
     return user;
   }
 }

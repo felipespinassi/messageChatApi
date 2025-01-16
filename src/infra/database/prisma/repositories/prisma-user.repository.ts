@@ -21,21 +21,37 @@ export class PrismaUserRepository implements UserRepository {
     return null;
   }
 
-  findAll(): Promise<any | null> {
-    return this.prismaService.user.findMany();
+  async findAll(): Promise<User[] | null> {
+    const rawUsers = await this.prismaService.user.findMany();
+
+    return rawUsers.map((rawUser) => PrismaUserMapper.toDomain(rawUser));
   }
-  findOneByEmail(email: string): Promise<any | null> {
-    return this.prismaService.user.findUnique({
+
+  async findOneByEmail(email: string): Promise<User | null> {
+    const user = await this.prismaService.user.findUnique({
       where: {
         email: email,
       },
     });
+
+    if (user) {
+      return PrismaUserMapper.toDomain(user);
+    }
+
+    return null;
   }
-  findOneById(id: number): Promise<any | null> {
-    return this.prismaService.user.findUnique({
+
+  async findOneById(id: number): Promise<User | null> {
+    const user = await this.prismaService.user.findUnique({
       where: {
         id: id,
       },
     });
+
+    if (user) {
+      return PrismaUserMapper.toDomain(user);
+    }
+
+    return null;
   }
 }
