@@ -1,8 +1,6 @@
 export class Conversation {
-  id: number;
-  messages: string[];
-  participants: string[];
-  is_group: boolean;
+  id: string;
+  isGroup: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

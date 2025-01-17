@@ -1,15 +1,25 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { ConversationRepository } from "src/core/repositories/conversation.repository";
+import { PrismaConversationMapper } from "../mapper/prisma-conversation.mapper";
+import { Conversation } from "src/core/entities/conversation";
+import { PrismaUserMapper } from "../mapper/prisma-user.mapper";
 
 @Injectable()
 export class PrismaConversationRepository implements ConversationRepository {
   constructor(private prismaService: PrismaService) {}
 
-  create(conversation: any): any {
-    return this.prismaService.conversation.create({
-      data: conversation,
+  async create(conversation: Conversation): Promise<Conversation | null> {
+    const raw = PrismaConversationMapper.toPrisma(conversation);
+    const rawConversation = await this.prismaService.conversation.create({
+      data: raw,
     });
+
+    if (rawConversation) {
+      return PrismaConversationMapper.toDomain(rawConversation);
+    }
+
+    return null;
   }
   async findAll(userId: number): Promise<any> {
     const conversations = this.prismaService.conversation.findMany({

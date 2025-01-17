@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import { ConversationService } from "src/core/services/conversation.service";
 import { CreateConversationDto } from "../dtos/conversation/create-conversation.dto";
+import { ConversationDto } from "../dtos/conversation/conversation.dto";
 
 @Controller("/conversation")
 export class ConversationController {
@@ -20,8 +21,17 @@ export class ConversationController {
   async createConversation(
     @Body(new ValidationPipe()) createConversationDto: CreateConversationDto
   ) {
-    const newConversation = await this.conversationService.createConversation(
+    const conversation = await this.conversationService.createConversation(
       createConversationDto
+    );
+
+    const newConversation = new ConversationDto(
+      conversation.id,
+      conversation.isGroup,
+      conversation.createdAt,
+      conversation.updatedAt,
+      conversation.message,
+      conversation.user
     );
 
     return newConversation;
@@ -41,6 +51,7 @@ export class ConversationController {
   }
 
   @Get("/:id")
+  //adicionar logica de nao exibir conversas que nao pertence ao usuario logado
   async findOneById(@Param() id: { id: string }): Promise<any> {
     return this.conversationService.findOneById(id.id);
   }

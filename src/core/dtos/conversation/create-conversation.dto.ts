@@ -1,3 +1,4 @@
 export class CreateConversationDto {
-  is_group: boolean;
+  isGroup: boolean;
+  users: number[];
 }

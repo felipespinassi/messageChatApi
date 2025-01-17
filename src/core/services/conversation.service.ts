@@ -15,10 +15,12 @@ export class ConversationService {
     private jwtService: JwtService
   ) {}
 
-  async createConversation(createConversationDto: any): Promise<any> {
+  async createConversation(
+    createConversationDto: CreateConversationDto
+  ): Promise<any> {
     const conversation = new Conversation();
 
-    conversation.is_group = createConversationDto.is_group;
+    conversation.isGroup = createConversationDto.isGroup;
 
     const newConversation = await this.conversationRepository.create(
       conversation
@@ -30,11 +32,11 @@ export class ConversationService {
 
     const conversationUser =
       await this.conversationUserService.createConversation({
-        user_id: createConversationDto.user_id,
+        user_id: createConversationDto.users,
         conversation_id: newConversation.id,
       });
 
-    return { conversationUser, newConversation };
+    return newConversation;
   }
 
   async findAll(dto): Promise<{}> {
