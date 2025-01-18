@@ -36,16 +36,8 @@ export class ConversationController {
   }
 
   @Get()
-  async findAll(
-    @Headers("Authorization") userToken,
-    @Query("user") user
-  ): Promise<any> {
-    const dto = {
-      user_id: user,
-      userToken,
-    };
-
-    return this.conversationService.findAll({ user_id: user, userToken });
+  async findAll(@Headers("Authorization") userToken, @Query("user") user) {
+    return this.conversationService.findAll({ userId: user, userToken });
   }
 
   @Get("/:id")

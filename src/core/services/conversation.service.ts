@@ -37,17 +37,19 @@ export class ConversationService {
   }
 
   async findAll(dto): Promise<{}> {
-    const { authHeader, user_id } = dto;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    const { userToken, userId } = dto;
+
+    console.log(userToken);
+    if (!userToken || !userToken.startsWith("Bearer ")) {
       throw new Error("Token não encontrado ou mal formatado");
     }
 
-    const token = authHeader.split(" ")[1];
+    const token = userToken.split(" ")[1];
     const user = this.jwtService.decode(token);
-    if (user.id && user_id) {
+    if (user.id && userId) {
       const conversation = await this.conversationRepository.findByUserIds(
         user.id,
-        Number(user_id)
+        Number(userId)
       );
 
       return {
@@ -56,7 +58,7 @@ export class ConversationService {
         updatedAt: conversation.updatedAt,
         is_group: conversation.is_group,
         messages: conversation.messages,
-        user: conversation.users.find((u) => u.id === Number(user_id)),
+        user: conversation.users.find((u) => u.id === Number(userId)),
       };
     }
     const conversations = await this.conversationRepository.findAll(user.id);
