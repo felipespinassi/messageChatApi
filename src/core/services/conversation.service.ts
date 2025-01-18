@@ -1,10 +1,8 @@
 import { ConflictException, Injectable } from "@nestjs/common";
-import { UserRepository } from "../repositories/user.repository";
 import { CreateConversationDto } from "../dtos/conversation/create-conversation.dto";
 import { ConversationRepository } from "../repositories/conversation.repository";
 import { Conversation } from "../entities/conversation";
 import { ConversationUserService } from "./conversationUser.service";
-import { MessageService } from "./message.service";
 import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
@@ -17,7 +15,7 @@ export class ConversationService {
 
   async createConversation(
     createConversationDto: CreateConversationDto
-  ): Promise<any> {
+  ): Promise<Conversation> {
     const conversation = new Conversation();
 
     conversation.isGroup = createConversationDto.isGroup;
@@ -30,11 +28,10 @@ export class ConversationService {
       throw new ConflictException("Conflito ao criar nova conversa");
     }
 
-    const conversationUser =
-      await this.conversationUserService.createConversation({
-        user_id: createConversationDto.users,
-        conversation_id: newConversation.id,
-      });
+    await this.conversationUserService.createConversation({
+      user_id: createConversationDto.users,
+      conversation_id: newConversation.id,
+    });
 
     return newConversation;
   }

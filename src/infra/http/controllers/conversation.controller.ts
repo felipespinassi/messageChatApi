@@ -12,11 +12,13 @@ import {
 import { ConversationService } from "src/core/services/conversation.service";
 import { CreateConversationDto } from "../dtos/conversation/create-conversation.dto";
 import { ConversationDto } from "../dtos/conversation/conversation.dto";
+import { ApiOkResponse } from "@nestjs/swagger";
 
 @Controller("/conversation")
 export class ConversationController {
   constructor(private conversationService: ConversationService) {}
 
+  @ApiOkResponse({ type: ConversationDto })
   @Post()
   async createConversation(
     @Body(new ValidationPipe()) createConversationDto: CreateConversationDto
@@ -27,11 +29,7 @@ export class ConversationController {
 
     const newConversation = new ConversationDto(
       conversation.id,
-      conversation.isGroup,
-      conversation.createdAt,
-      conversation.updatedAt,
-      conversation.message,
-      conversation.user
+      conversation.isGroup
     );
 
     return newConversation;

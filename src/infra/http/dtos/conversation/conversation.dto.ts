@@ -1,26 +1,17 @@
-import { UserDto } from "../user/user.dto";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsBoolean, IsString } from "class-validator";
 
 export class ConversationDto {
-  id: number;
-  isGroup: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  message: {};
-  user: UserDto;
+  @ApiProperty()
+  @IsString()
+  id: string;
 
-  constructor(
-    id: number,
-    isGroup: boolean,
-    createdAt: Date,
-    updatedAt: Date,
-    message: {},
-    user: UserDto
-  ) {
+  @ApiProperty()
+  @IsBoolean()
+  isGroup: boolean;
+
+  constructor(id: string, isGroup: boolean) {
     this.id = id;
     this.isGroup = isGroup;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
-    this.message = message;
-    this.user = user;
   }
 }
