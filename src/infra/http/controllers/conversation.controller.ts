@@ -23,7 +23,7 @@ export class ConversationController {
   async createConversation(
     @Body(new ValidationPipe()) createConversationDto: CreateConversationDto
   ) {
-    const conversation = await this.conversationService.createConversation(
+    const conversation = await this.conversationService.create(
       createConversationDto
     );
 
@@ -37,15 +37,15 @@ export class ConversationController {
 
   @Get()
   async findAll(
-    @Headers("Authorization") authHeader,
+    @Headers("Authorization") userToken,
     @Query("user") user
   ): Promise<any> {
     const dto = {
       user_id: user,
-      authHeader,
+      userToken,
     };
 
-    return this.conversationService.findAll(dto);
+    return this.conversationService.findAll({ user_id: user, userToken });
   }
 
   @Get("/:id")

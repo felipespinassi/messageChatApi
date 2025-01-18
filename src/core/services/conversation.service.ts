@@ -13,7 +13,7 @@ export class ConversationService {
     private jwtService: JwtService
   ) {}
 
-  async createConversation(
+  async create(
     createConversationDto: CreateConversationDto
   ): Promise<Conversation> {
     const conversation = new Conversation();
@@ -28,9 +28,9 @@ export class ConversationService {
       throw new ConflictException("Conflito ao criar nova conversa");
     }
 
-    await this.conversationUserService.createConversation({
-      user_id: createConversationDto.users,
-      conversation_id: newConversation.id,
+    await this.conversationUserService.create({
+      users: createConversationDto.users,
+      conversationId: newConversation.id,
     });
 
     return newConversation;
