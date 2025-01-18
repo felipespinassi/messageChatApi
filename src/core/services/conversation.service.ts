@@ -5,6 +5,8 @@ import { Conversation } from "../entities/conversation";
 import { ConversationUserService } from "./conversationUser.service";
 import { JwtService } from "@nestjs/jwt";
 
+import { FilterConversationDto } from "../dtos/conversation/filter-conversation.dto";
+
 @Injectable()
 export class ConversationService {
   constructor(
@@ -36,9 +38,7 @@ export class ConversationService {
     return newConversation;
   }
 
-  async findAll(dto): Promise<{}> {
-    const { userToken, userId } = dto;
-
+  async findAll(query: FilterConversationDto, userToken): Promise<[] | {}> {
     console.log(userToken);
     if (!userToken || !userToken.startsWith("Bearer ")) {
       throw new Error("Token não encontrado ou mal formatado");
@@ -46,10 +46,10 @@ export class ConversationService {
 
     const token = userToken.split(" ")[1];
     const user = this.jwtService.decode(token);
-    if (user.id && userId) {
+    if (user.id && query.userId) {
       const conversation = await this.conversationRepository.findByUserIds(
         user.id,
-        Number(userId)
+        query.userId
       );
 
       return {
@@ -58,7 +58,7 @@ export class ConversationService {
         updatedAt: conversation.updatedAt,
         isGroup: conversation.isGroup,
         messages: conversation.messages,
-        user: conversation.users.find((u) => u.id === Number(userId)),
+        user: conversation.users.find((u) => u.id === query.userId),
       };
     }
     const conversations = await this.conversationRepository.findAll(user.id);
@@ -69,7 +69,7 @@ export class ConversationService {
         createdAt: conversation.createdAt,
         updatedAt: conversation.updatedAt,
         isGroup: conversation.isGroup,
-        message: conversation.messages.pop(),
+        messages: conversation.messages.pop(),
         user: conversation.users.find((u) => u.id !== user.id),
       };
     });

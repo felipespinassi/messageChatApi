@@ -21,7 +21,7 @@ export class PrismaConversationRepository implements ConversationRepository {
 
     return null;
   }
-  async findAll(userId: number): Promise<any> {
+  async findAll(userId: number): Promise<Conversation[] | null> {
     const rawConversations = await this.prismaService.conversation.findMany({
       where: {
         users: {
@@ -53,9 +53,13 @@ export class PrismaConversationRepository implements ConversationRepository {
         },
       },
     });
-    return rawConversations.map((raw) =>
-      PrismaConversationMapper.toDomain(raw)
-    );
+
+    if (rawConversations) {
+      return rawConversations.map((raw) =>
+        PrismaConversationMapper.toDomain(raw)
+      );
+    }
+    return null;
   }
 
   async findByUserIds(userId1: number, userId2: number): Promise<any> {

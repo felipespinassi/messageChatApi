@@ -13,6 +13,8 @@ import { ConversationService } from "src/core/services/conversation.service";
 import { CreateConversationDto } from "../dtos/conversation/create-conversation.dto";
 import { ConversationDto } from "../dtos/conversation/conversation.dto";
 import { ApiOkResponse } from "@nestjs/swagger";
+import { FilterConversationDto } from "../dtos/conversation/filter-conversation.dto";
+import { ConversationUserMessageDto } from "../dtos/conversation/conversation-user-message.dto";
 
 @Controller("/conversation")
 export class ConversationController {
@@ -35,9 +37,18 @@ export class ConversationController {
     return newConversation;
   }
 
+  @ApiOkResponse({ type: ConversationUserMessageDto })
   @Get()
-  async findAll(@Headers("Authorization") userToken, @Query("user") user) {
-    return this.conversationService.findAll({ userId: user, userToken });
+  async findAll(
+    @Headers("Authorization") userToken,
+    @Query(new ValidationPipe({ transform: true })) query: FilterConversationDto
+  ) {
+    const conversation = await this.conversationService.findAll(
+      query,
+      userToken
+    );
+
+    return conversation;
   }
 
   @Get("/:id")
