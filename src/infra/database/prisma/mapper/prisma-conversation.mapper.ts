@@ -9,13 +9,21 @@ export class PrismaConversationMapper {
   }
 
   public static toDomain(rawUser: any) {
-    const user = new Conversation();
-
-    user.isGroup = rawUser.is_group;
-    user.id = rawUser.id;
-    user.createdAt = rawUser.createdAt;
-    user.updatedAt = rawUser.updatedAt;
-
-    return user;
+    return {
+      id: rawUser.id,
+      isGroup: rawUser.is_group,
+      createdAt: rawUser.createdAt,
+      updatedAt: rawUser.updatedAt,
+      messages: rawUser.messages.map((message) => {
+        return {
+          id: message.id,
+          content: message.content,
+          userId: message.user_id,
+          sentAt: message.sent_at,
+          type: message.type,
+        };
+      }),
+      users: rawUser.users.map((u) => u.user),
+    };
   }
 }
