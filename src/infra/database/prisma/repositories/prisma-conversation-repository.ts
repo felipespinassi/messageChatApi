@@ -15,11 +15,16 @@ export class PrismaConversationRepository implements ConversationRepository {
       data: raw,
     });
 
-    if (rawConversation) {
-      return PrismaConversationMapper.toDomain(rawConversation);
-    }
+    // if (rawConversation) {
+    //   return PrismaConversationMapper.toDomain(rawConversation);
+    // }
 
-    return null;
+    return {
+      id: rawConversation.id,
+      isGroup: rawConversation.is_group,
+      createdAt: rawConversation.created_at,
+      updatedAt: rawConversation.updated_at,
+    };
   }
   async findAll(userId: number): Promise<ConversationUsersMessages[] | null> {
     const rawConversations = await this.prismaService.conversation.findMany({

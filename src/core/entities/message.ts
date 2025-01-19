@@ -3,8 +3,8 @@ export class Message {
   content: string;
   createdAt: Date;
   updatedAt: Date;
-  user_id: number;
-  sent_at: Date;
-  conversation_id: string;
+  userId: number;
+  sentAt: Date;
+  conversationId: string;
   type: string;
 }

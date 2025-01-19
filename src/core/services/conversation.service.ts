@@ -19,7 +19,6 @@ export class ConversationService {
     createConversationDto: CreateConversationDto
   ): Promise<Conversation> {
     const conversation = new Conversation();
-
     conversation.isGroup = createConversationDto.isGroup;
 
     const newConversation = await this.conversationRepository.create(
