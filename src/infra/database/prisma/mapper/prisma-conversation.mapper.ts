@@ -12,8 +12,8 @@ export class PrismaConversationMapper {
     return {
       id: rawUser.id,
       isGroup: rawUser.is_group,
-      createdAt: rawUser.createdAt,
-      updatedAt: rawUser.updatedAt,
+      createdAt: rawUser.created_at,
+      updatedAt: rawUser.updated_at,
       messages: rawUser.messages.map((message) => {
         return {
           id: message.id,
