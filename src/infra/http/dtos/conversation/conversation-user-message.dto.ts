@@ -7,14 +7,17 @@ export class ConversationUserMessageDto {
   @ApiProperty()
   isGroup: boolean;
   @ApiProperty()
-  messages: [];
+  message: [];
   @ApiProperty()
   user: [];
+
+  createdAt: Date;
+  updatedAt: Date;
 
   constructor(conversation) {
     this.id = conversation.id;
     this.isGroup = conversation.isGroup;
-    this.messages = conversation.messages;
+    this.message = conversation.message;
     this.user = conversation.users;
   }
 }

@@ -3,7 +3,7 @@ import { PrismaService } from "../prisma.service";
 import { ConversationRepository } from "src/core/repositories/conversation.repository";
 import { PrismaConversationMapper } from "../mapper/prisma-conversation.mapper";
 import { Conversation } from "src/core/entities/conversation";
-import { PrismaUserMapper } from "../mapper/prisma-user.mapper";
+import { ConversationUsersMessagesDto } from "src/infra/http/dtos/conversation/conversation-users-messages.dto";
 
 @Injectable()
 export class PrismaConversationRepository implements ConversationRepository {
@@ -21,7 +21,9 @@ export class PrismaConversationRepository implements ConversationRepository {
 
     return null;
   }
-  async findAll(userId: number): Promise<Conversation[] | null> {
+  async findAll(
+    userId: number
+  ): Promise<ConversationUsersMessagesDto[] | null> {
     const rawConversations = await this.prismaService.conversation.findMany({
       where: {
         users: {

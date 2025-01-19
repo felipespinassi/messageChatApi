@@ -4,8 +4,7 @@ import { ConversationRepository } from "../repositories/conversation.repository"
 import { Conversation } from "../entities/conversation";
 import { ConversationUserService } from "./conversationUser.service";
 import { JwtService } from "@nestjs/jwt";
-
-import { FilterConversationDto } from "../dtos/conversation/filter-conversation.dto";
+import { ConversationUserMessageDto } from "../dtos/conversation/conversation-user-message.dto";
 
 @Injectable()
 export class ConversationService {
@@ -38,41 +37,58 @@ export class ConversationService {
     return newConversation;
   }
 
-  async findAll(query: FilterConversationDto, userToken): Promise<[] | {}> {
-    console.log(userToken);
+  async findAll(userToken: string): Promise<ConversationUserMessageDto[]> {
+    if (!userToken || !userToken.startsWith("Bearer ")) {
+      throw new Error("Token não encontrado ou mal formatado");
+    }
+
+    const token = userToken.split(" ")[1];
+    const user = this.jwtService.decode(token) as { id: number };
+
+    const conversations = await this.conversationRepository.findAll(user.id);
+
+    if (!conversations) {
+      throw new ConflictException("Conflito ao buscar conversas");
+    }
+    return conversations
+      .map((conversation) => {
+        const otherUser = conversation.users.find((u) => u.id !== user.id);
+        if (!otherUser) return null;
+        return {
+          id: conversation.id,
+          createdAt: conversation.createdAt,
+          updatedAt: conversation.updatedAt,
+          isGroup: conversation.isGroup,
+          message: conversation.messages.pop() || {},
+          user: otherUser,
+        };
+      })
+      .filter(
+        (conversation) => conversation !== null
+      ) as ConversationUserMessageDto[];
+  }
+
+  async findOneByUserId(userToken, id: string): Promise<any> {
     if (!userToken || !userToken.startsWith("Bearer ")) {
       throw new Error("Token não encontrado ou mal formatado");
     }
 
     const token = userToken.split(" ")[1];
     const user = this.jwtService.decode(token);
-    if (user.id && query.userId) {
-      const conversation = await this.conversationRepository.findByUserIds(
-        user.id,
-        query.userId
-      );
 
-      return {
-        id: conversation.id,
-        createdAt: conversation.createdAt,
-        updatedAt: conversation.updatedAt,
-        isGroup: conversation.isGroup,
-        messages: conversation.messages,
-        user: conversation.users.find((u) => u.id === query.userId),
-      };
-    }
-    const conversations = await this.conversationRepository.findAll(user.id);
+    const conversation = await this.conversationRepository.findByUserIds(
+      user.id,
+      parseInt(id)
+    );
 
-    return conversations.map((conversation) => {
-      return {
-        id: conversation.id,
-        createdAt: conversation.createdAt,
-        updatedAt: conversation.updatedAt,
-        isGroup: conversation.isGroup,
-        messages: conversation.messages.pop(),
-        user: conversation.users.find((u) => u.id !== user.id),
-      };
-    });
+    return {
+      id: conversation.id,
+      createdAt: conversation.createdAt,
+      updatedAt: conversation.updatedAt,
+      isGroup: conversation.isGroup,
+      messages: conversation.messages,
+      user: conversation.users.find((u) => u.id === parseInt(id)),
+    };
   }
 
   async findOneById(id: string): Promise<any> {
