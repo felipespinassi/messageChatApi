@@ -1,4 +1,4 @@
-export class ConversationUsersMessagesDto {
+export class ConversationUsersMessages {
   id: string;
 
   isGroup: boolean;

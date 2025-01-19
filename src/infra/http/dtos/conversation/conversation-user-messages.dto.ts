@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class ConversationUserMessageDto {
+export class ConversationUserMessagesDto {
   @ApiProperty()
   id: string;
 
   @ApiProperty()
   isGroup: boolean;
   @ApiProperty()
-  message: {};
+  messages: [];
   @ApiProperty()
   user: {};
 
@@ -17,7 +17,7 @@ export class ConversationUserMessageDto {
   constructor(conversation) {
     this.id = conversation.id;
     this.isGroup = conversation.isGroup;
-    this.message = conversation.message;
+    this.messages = conversation.message;
     this.user = conversation.users;
   }
 }

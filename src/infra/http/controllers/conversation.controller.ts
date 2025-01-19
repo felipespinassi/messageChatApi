@@ -4,6 +4,7 @@ import {
   Get,
   Headers,
   Param,
+  ParseIntPipe,
   Post,
   ValidationPipe,
 } from "@nestjs/common";
@@ -12,6 +13,7 @@ import { CreateConversationDto } from "../dtos/conversation/create-conversation.
 import { ConversationDto } from "../dtos/conversation/conversation.dto";
 import { ApiOkResponse } from "@nestjs/swagger";
 import { ConversationUserMessageDto } from "../dtos/conversation/conversation-user-message.dto";
+import { ConversationUserMessagesDto } from "../dtos/conversation/conversation-user-messages.dto";
 
 @Controller("/conversation")
 export class ConversationController {
@@ -42,12 +44,12 @@ export class ConversationController {
     return conversation;
   }
 
+  @ApiOkResponse({ type: ConversationUserMessagesDto })
   @Get("user/:id")
-  //adicionar logica de nao exibir conversas que nao pertence ao usuario logado
   async findOneByUserId(
     @Headers("Authorization") userToken,
-    @Param() id: { id: string }
-  ): Promise<any> {
-    return this.conversationService.findOneByUserId(userToken, id.id);
+    @Param("id", ParseIntPipe) id: number
+  ) {
+    return this.conversationService.findOneByUserId(userToken, id);
   }
 }
