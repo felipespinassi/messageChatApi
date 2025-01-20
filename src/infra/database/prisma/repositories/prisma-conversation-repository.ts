@@ -1,30 +1,26 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { ConversationRepository } from "src/core/repositories/conversation.repository";
-import { PrismaConversationMapper } from "../mapper/prisma-conversation.mapper";
 import { Conversation } from "src/core/entities/conversation";
 import { ConversationUsersMessages } from "src/core/entities/conversation-messages-users.entity";
+import { PrismaConversationUsersMessagesMapper } from "../mapper/prisma-conversation-users-messages.mapper";
+import { PrismaConversationMapper } from "../mapper/prisma-conversation.mapper";
 
 @Injectable()
 export class PrismaConversationRepository implements ConversationRepository {
   constructor(private prismaService: PrismaService) {}
 
   async create(conversation: Conversation): Promise<Conversation | null> {
-    const raw = PrismaConversationMapper.toPrisma(conversation);
+    const raw = PrismaConversationUsersMessagesMapper.toPrisma(conversation);
     const rawConversation = await this.prismaService.conversation.create({
       data: raw,
     });
 
-    // if (rawConversation) {
-    //   return PrismaConversationMapper.toDomain(rawConversation);
-    // }
+    if (rawConversation) {
+      return PrismaConversationMapper.toDomain(rawConversation);
+    }
 
-    return {
-      id: rawConversation.id,
-      isGroup: rawConversation.is_group,
-      createdAt: rawConversation.created_at,
-      updatedAt: rawConversation.updated_at,
-    };
+    return null;
   }
   async findAll(userId: number): Promise<ConversationUsersMessages[] | null> {
     const rawConversations = await this.prismaService.conversation.findMany({
@@ -61,13 +57,16 @@ export class PrismaConversationRepository implements ConversationRepository {
 
     if (rawConversations) {
       return rawConversations.map((raw) =>
-        PrismaConversationMapper.toDomain(raw)
+        PrismaConversationUsersMessagesMapper.toDomain(raw)
       );
     }
     return null;
   }
 
-  async findByUserIds(userId1: number, userId2: number): Promise<any> {
+  async findByUserIds(
+    userId1: number,
+    userId2: number
+  ): Promise<ConversationUsersMessages | null> {
     const conversation = await this.prismaService.conversation.findFirst({
       where: {
         AND: [
@@ -118,10 +117,11 @@ export class PrismaConversationRepository implements ConversationRepository {
       },
     });
 
-    return {
-      ...PrismaConversationMapper.toDomain(conversation),
-      users: conversation && conversation.users.map((u) => u.user),
-    };
+    if (conversation) {
+      return PrismaConversationUsersMessagesMapper.toDomain(conversation);
+    }
+
+    return null;
   }
   async findOneById(id: string): Promise<any | null> {
     return await this.prismaService.conversation.findUnique({

@@ -8,8 +8,8 @@ export class CreateMessageDto {
   type: string;
 
   @ApiProperty()
-  user_id: number;
+  userId: number;
 
   @ApiProperty()
-  conversation_id: string;
+  conversationId: string;
 }

@@ -8,22 +8,12 @@ export class PrismaConversationMapper {
     };
   }
 
-  public static toDomain(rawUser: any) {
+  public static toDomain(rawConversation: any) {
     return {
-      id: rawUser.id,
-      isGroup: rawUser.is_group,
-      createdAt: rawUser.created_at,
-      updatedAt: rawUser.updated_at,
-      messages: rawUser.messages.map((message) => {
-        return {
-          id: message.id,
-          content: message.content,
-          userId: message.user_id,
-          sentAt: message.sent_at,
-          type: message.type,
-        };
-      }),
-      users: rawUser.users.map((u) => u.user),
+      id: rawConversation.id,
+      isGroup: rawConversation.is_group,
+      createdAt: rawConversation.created_at,
+      updatedAt: rawConversation.updated_at,
     };
   }
 }
