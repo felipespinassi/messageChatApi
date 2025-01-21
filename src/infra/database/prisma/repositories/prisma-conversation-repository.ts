@@ -2,8 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { ConversationRepository } from "src/core/repositories/conversation.repository";
 import { Conversation } from "src/core/entities/conversation";
-import { ConversationUsersMessages } from "src/core/entities/conversation-messages-users.entity";
-import { PrismaConversationUsersMessagesMapper } from "../mapper/prisma-conversation-users-messages.mapper";
 import { PrismaConversationMapper } from "../mapper/prisma-conversation.mapper";
 
 @Injectable()
@@ -11,7 +9,7 @@ export class PrismaConversationRepository implements ConversationRepository {
   constructor(private prismaService: PrismaService) {}
 
   async create(conversation: Conversation): Promise<Conversation | null> {
-    const raw = PrismaConversationUsersMessagesMapper.toPrisma(conversation);
+    const raw = PrismaConversationMapper.toPrisma(conversation);
     const rawConversation = await this.prismaService.conversation.create({
       data: raw,
     });
@@ -22,7 +20,7 @@ export class PrismaConversationRepository implements ConversationRepository {
 
     return null;
   }
-  async findAll(userId: number): Promise<ConversationUsersMessages[] | null> {
+  async findAll(userId: number): Promise<Conversation[] | null> {
     const rawConversations = await this.prismaService.conversation.findMany({
       where: {
         users: {
@@ -57,7 +55,7 @@ export class PrismaConversationRepository implements ConversationRepository {
 
     if (rawConversations) {
       return rawConversations.map((raw) =>
-        PrismaConversationUsersMessagesMapper.toDomain(raw)
+        PrismaConversationMapper.toDomain(raw)
       );
     }
     return null;
@@ -66,7 +64,7 @@ export class PrismaConversationRepository implements ConversationRepository {
   async findByUserIds(
     userId1: number,
     userId2: number
-  ): Promise<ConversationUsersMessages | null> {
+  ): Promise<Conversation | null> {
     const conversation = await this.prismaService.conversation.findFirst({
       where: {
         AND: [
@@ -118,7 +116,7 @@ export class PrismaConversationRepository implements ConversationRepository {
     });
 
     if (conversation) {
-      return PrismaConversationUsersMessagesMapper.toDomain(conversation);
+      return PrismaConversationMapper.toDomain(conversation);
     }
 
     return null;

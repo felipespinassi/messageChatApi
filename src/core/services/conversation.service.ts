@@ -52,14 +52,14 @@ export class ConversationService {
     }
     return conversations
       .map((conversation) => {
-        const otherUser = conversation.users.find((u) => u.id !== user.id);
+        const otherUser = conversation.users?.find((u) => u.id !== user.id);
         if (!otherUser) return null;
         return {
           id: conversation.id,
           createdAt: conversation.createdAt,
           updatedAt: conversation.updatedAt,
           isGroup: conversation.isGroup,
-          message: conversation.messages.pop() || {},
+          message: conversation.messages?.pop() || {},
           user: otherUser,
         };
       })
@@ -91,11 +91,11 @@ export class ConversationService {
       createdAt: conversation.createdAt,
       updatedAt: conversation.updatedAt,
       isGroup: conversation.isGroup,
-      messages: conversation.messages,
-      user: conversation.users.find((u) => u.id === id) || {
-        id: 0,
-        name: "",
-        email: "",
+      messages: conversation.messages || [],
+      user: conversation.users?.find((u) => u.id === id) as {
+        id: number;
+        name: string;
+        email: string;
       },
     };
   }
