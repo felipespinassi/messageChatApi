@@ -18,6 +18,15 @@ export class ConversationService {
   async create(
     createConversationDto: CreateConversationDto
   ): Promise<Conversation> {
+    const conversationExists = await this.conversationRepository.findByUserIds(
+      createConversationDto.users[0],
+      createConversationDto.users[1]
+    );
+
+    if (conversationExists) {
+      throw new Error("Conversa já existe");
+    }
+
     const conversation = new Conversation();
     conversation.isGroup = createConversationDto.isGroup;
 
@@ -37,22 +46,19 @@ export class ConversationService {
     return newConversation;
   }
 
-  async findAll(userToken: string): Promise<ConversationUserMessageDto[]> {
-    if (!userToken || !userToken.startsWith("Bearer ")) {
-      throw new Error("Token não encontrado ou mal formatado");
-    }
-
-    const token = userToken.split(" ")[1];
-    const user = this.jwtService.decode(token) as { id: number };
-
-    const conversations = await this.conversationRepository.findAll(user.id);
+  async findAll(userFromToken: any): Promise<ConversationUserMessageDto[]> {
+    const conversations = await this.conversationRepository.findAll(
+      userFromToken.id
+    );
 
     if (!conversations) {
       throw new ConflictException("Conflito ao buscar conversas");
     }
     return conversations
       .map((conversation) => {
-        const otherUser = conversation.users?.find((u) => u.id !== user.id);
+        const otherUser = conversation.users?.find(
+          (u) => u.id !== userFromToken.id
+        );
         if (!otherUser) return null;
         return {
           id: conversation.id,
@@ -67,18 +73,11 @@ export class ConversationService {
   }
 
   async findOneByUserId(
-    userToken,
+    userFromToken,
     id: number
   ): Promise<ConversationUserMessagesDto> {
-    if (!userToken || !userToken.startsWith("Bearer ")) {
-      throw new Error("Token não encontrado ou mal formatado");
-    }
-
-    const token = userToken.split(" ")[1];
-    const user = this.jwtService.decode(token);
-
     const conversation = await this.conversationRepository.findByUserIds(
-      user.id,
+      userFromToken.id,
       id
     );
 

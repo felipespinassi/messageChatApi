@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Req,
   ValidationPipe,
 } from "@nestjs/common";
 import { ConversationService } from "src/core/services/conversation.service";
@@ -38,18 +39,16 @@ export class ConversationController {
 
   @ApiOkResponse({ type: ConversationUserMessageDto })
   @Get()
-  async findAll(@Headers("Authorization") userToken) {
-    const conversation = await this.conversationService.findAll(userToken);
+  async findAll(@Req() req) {
+    console.log(req.user);
+    const conversation = await this.conversationService.findAll(req.user);
 
     return conversation;
   }
 
   @ApiOkResponse({ type: ConversationUserMessagesDto })
   @Get("user/:id")
-  async findOneByUserId(
-    @Headers("Authorization") userToken,
-    @Param("id", ParseIntPipe) id: number
-  ) {
-    return this.conversationService.findOneByUserId(userToken, id);
+  async findOneByUserId(@Req() req, @Param("id", ParseIntPipe) id: number) {
+    return this.conversationService.findOneByUserId(req.user, id);
   }
 }
