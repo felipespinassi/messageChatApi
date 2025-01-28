@@ -13,6 +13,8 @@ import { ConversationService } from "src/core/services/conversation.service";
 import { ConversationUserService } from "src/core/services/conversationUser.service";
 import { MessageController } from "./controllers/message.controller";
 import { MessageService } from "src/core/services/message.service";
+import { CompanyController } from "./controllers/company.controller";
+import { CompanyService } from "src/core/services/company.service";
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { MessageService } from "src/core/services/message.service";
     AuthController,
     ConversationController,
     MessageController,
+    CompanyController,
   ],
   providers: [
     UserService,
@@ -34,6 +37,7 @@ import { MessageService } from "src/core/services/message.service";
     ConversationService,
     ConversationUserService,
     MessageService,
+    CompanyService,
     { provide: APP_GUARD, useClass: AuthGuard },
     ChatGateway,
   ],

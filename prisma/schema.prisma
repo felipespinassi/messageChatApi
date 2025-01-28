@@ -24,7 +24,7 @@ model User {
   type          String             @default("user")
   messages      Message[]
   conversations ConversationUser[]
-  companies     Companies?         @relation(fields: [company_id], references: [id])
+  companies     Company?           @relation(fields: [company_id], references: [id])
   company_id    Int?
 
   @@map("users")
@@ -67,13 +67,14 @@ model ConversationUser {
   @@map("conversation_users")
 }
 
-model Companies {
+model Company {
   id         Int            @id @default(autoincrement())
   name       String
-  email      String
+  email      String         @unique
   created_at DateTime       @default(now())
   updated_at DateTime       @updatedAt
-  document   String
+  document   String         @unique
+  password   String
   users      User[]
   phones     CompanyPhone[]
 
@@ -81,12 +82,12 @@ model Companies {
 }
 
 model CompanyPhone {
-  id           Int       @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   phone_number String
   company_id   Int
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @updatedAt
-  company      Companies @relation(fields: [company_id], references: [id])
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  company      Company  @relation(fields: [company_id], references: [id])
 
-  @@map("company_phone")
+  @@map("company_phones")
 }

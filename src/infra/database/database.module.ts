@@ -8,6 +8,8 @@ import { ConversationUserRepository } from "src/core/repositories/conversationUs
 import { PrismaConversationUserRepository } from "./prisma/repositories/prisma-conversation-user.repository";
 import { MessageRepository } from "src/core/repositories/message.repository";
 import { PrismaMessageRepository } from "./prisma/repositories/prisma-message-repository";
+import { CompanyRepository } from "src/core/repositories/company.repository";
+import { PrismaCompanyRepository } from "./prisma/repositories/prisma-company-repository";
 
 @Module({
   providers: [
@@ -28,12 +30,17 @@ import { PrismaMessageRepository } from "./prisma/repositories/prisma-message-re
       provide: MessageRepository,
       useClass: PrismaMessageRepository,
     },
+    {
+      provide: CompanyRepository,
+      useClass: PrismaCompanyRepository,
+    },
   ],
   exports: [
     UserRepository,
     ConversationRepository,
     ConversationUserRepository,
     MessageRepository,
+    CompanyRepository,
   ],
 })
 export class DatabaseModule {}
