@@ -4,6 +4,6 @@ export class Company {
   email: string;
   password: string;
   document: string;
-  // createdAt: Date;
-  // updatedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
