@@ -5,12 +5,13 @@ import {
 } from "@nestjs/common";
 import { CompanyRepository } from "../repositories/company.repository";
 import { Company } from "../entities/company";
+import { CreateCompanyDto } from "../dtos/company/create-company.dto";
 
 @Injectable()
 export class CompanyService {
   constructor(private companyRepository: CompanyRepository) {}
 
-  async create(companyDto: Company): Promise<Company> {
+  async create(companyDto: CreateCompanyDto): Promise<Company> {
     const company = new Company();
 
     company.name = companyDto.name;
