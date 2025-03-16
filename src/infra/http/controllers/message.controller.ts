@@ -32,4 +32,9 @@ export class MessageController {
   //   async findOneById(@Param() id: { id: string }): Promise<User> {
   //     return this.userService.findOneById(id.id);
   //   }
+
+  @Get()
+  findAll(@Query("userId") userId: string) {
+    return this.messageService.findAll(userId);
+  }
 }

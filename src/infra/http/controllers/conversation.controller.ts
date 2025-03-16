@@ -40,7 +40,6 @@ export class ConversationController {
   @ApiOkResponse({ type: ConversationUserMessageDto })
   @Get()
   async findAll(@Req() req) {
-    console.log(req.user);
     const conversation = await this.conversationService.findAll(req.user);
 
     return conversation;

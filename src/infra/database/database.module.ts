@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { MongooseModule } from "@nestjs/mongoose";
 import { UserRepository } from "src/core/repositories/user.repository";
 import { PrismaUserRepository } from "./prisma/repositories/prisma-user.repository";
 import { PrismaService } from "./prisma/prisma.service";
@@ -10,8 +11,21 @@ import { MessageRepository } from "src/core/repositories/message.repository";
 import { PrismaMessageRepository } from "./prisma/repositories/prisma-message-repository";
 import { CompanyRepository } from "src/core/repositories/company.repository";
 import { PrismaCompanyRepository } from "./prisma/repositories/prisma-company-repository";
+import { MessageSchema } from "./mongoose/schemas/message.schema";
 
 @Module({
+  imports: [
+    MongooseModule.forRoot(
+      "mongodb+srv://felipespinassi:21456379fe@cluster0.qsjoq.mongodb.net/"
+    ),
+
+    MongooseModule.forFeature([
+      {
+        name: "Message",
+        schema: MessageSchema,
+      },
+    ]),
+  ],
   providers: [
     PrismaService,
     {
