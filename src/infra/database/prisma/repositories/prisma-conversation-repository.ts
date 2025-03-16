@@ -121,33 +121,33 @@ export class PrismaConversationRepository implements ConversationRepository {
 
     return null;
   }
-  async findOneById(id: string): Promise<any | null> {
-    return await this.prismaService.conversation.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        users: {
-          select: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-        },
-        messages: {
-          select: {
-            id: true,
-            content: true,
-            user_id: true,
-            sent_at: true,
-            type: true,
-          },
-        },
-      },
-    });
-  }
+  // async findOneById(id: string): Promise<any | null> {
+  //   return await this.prismaService.conversation.findUnique({
+  //     where: {
+  //       id,
+  //     },
+  //     include: {
+  //       users: {
+  //         select: {
+  //           user: {
+  //             select: {
+  //               id: true,
+  //               name: true,
+  //               email: true,
+  //             },
+  //           },
+  //         },
+  //       },
+  //       messages: {
+  //         select: {
+  //           id: true,
+  //           content: true,
+  //           user_id: true,
+  //           sent_at: true,
+  //           type: true,
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 }

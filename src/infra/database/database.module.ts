@@ -16,7 +16,7 @@ import { MessageSchema } from "./mongoose/schemas/message.schema";
 @Module({
   imports: [
     MongooseModule.forRoot(
-      "mongodb+srv://felipespinassi:21456379fe@cluster0.qsjoq.mongodb.net/"
+      "mongodb+srv://admin:21456379fe@cluster0.qsjoq.mongodb.net/"
     ),
 
     MongooseModule.forFeature([

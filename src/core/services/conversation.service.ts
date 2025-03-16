@@ -99,8 +99,8 @@ export class ConversationService {
     };
   }
 
-  async findOneById(id: string): Promise<any> {
-    const conversation = await this.conversationRepository.findOneById(id);
-    return conversation;
-  }
+  // async findOneById(id: string): Promise<any> {
+  //   const conversation = await this.conversationRepository.findOneById(id);
+  //   return conversation;
+  // }
 }
