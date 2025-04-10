@@ -24,4 +24,8 @@ export class MessageService {
 
     return newMessage;
   }
+
+  findAll(userId: any) {
+    return this.messageRepository.findAll(userId);
+  }
 }

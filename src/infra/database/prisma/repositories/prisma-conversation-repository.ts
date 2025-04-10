@@ -3,10 +3,16 @@ import { PrismaService } from "../prisma.service";
 import { ConversationRepository } from "src/core/repositories/conversation.repository";
 import { Conversation } from "src/core/entities/conversation";
 import { PrismaConversationMapper } from "../mapper/prisma-conversation.mapper";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { Message as MessageSchema } from "../../mongoose/schemas/message.schema";
 
 @Injectable()
 export class PrismaConversationRepository implements ConversationRepository {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    @InjectModel("Message") private message: Model<MessageSchema>
+  ) {}
 
   async create(conversation: Conversation): Promise<Conversation | null> {
     const raw = PrismaConversationMapper.toPrisma(conversation);
@@ -41,22 +47,19 @@ export class PrismaConversationRepository implements ConversationRepository {
             },
           },
         },
-        messages: {
-          select: {
-            id: true,
-            content: true,
-            user_id: true,
-            sent_at: true,
-            type: true,
-          },
-        },
       },
     });
 
     if (rawConversations) {
-      return rawConversations.map((raw) =>
-        PrismaConversationMapper.toDomain(raw)
+      const conversations = await Promise.all(
+        rawConversations.map(async (raw) => {
+          const messages = await this.message.find({
+            conversation_id: raw?.id,
+          });
+          return PrismaConversationMapper.toDomain({ ...raw, messages });
+        })
       );
+      return conversations;
     }
     return null;
   }
@@ -103,51 +106,60 @@ export class PrismaConversationRepository implements ConversationRepository {
             },
           },
         },
-        messages: {
-          select: {
-            id: true,
-            content: true,
-            user_id: true,
-            sent_at: true,
-            type: true,
-          },
-        },
+        // messages: {
+        //   select: {
+        //     id: true,
+        //     content: true,
+        //     user_id: true,
+        //     sent_at: true,
+        //     type: true,
+        //   },
+        // },
       },
     });
 
+    const messages = await this.message.find({
+      conversation_id: conversation?.id,
+    });
+
+    const fullConversation = {
+      ...conversation,
+      messages,
+    };
+
     if (conversation) {
-      return PrismaConversationMapper.toDomain(conversation);
+      return PrismaConversationMapper.toDomain(fullConversation);
     }
 
     return null;
   }
-  async findOneById(id: string): Promise<any | null> {
-    return await this.prismaService.conversation.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        users: {
-          select: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-        },
-        messages: {
-          select: {
-            id: true,
-            content: true,
-            user_id: true,
-            sent_at: true,
-            type: true,
-          },
-        },
-      },
-    });
-  }
+  // async findOneById(id: string): Promise<any | null> {
+  //   return await this.prismaService.conversation.findUnique({
+  //     where: {
+  //       id,
+  //     },
+  //     include: {
+  //       users: {
+  //         select: {
+  //           user: {
+  //             select: {
+  //               id: true,
+  //               name: true,
+  //               email: true,
+  //             },
+  //           },
+  //         },
+  //       },
+  //       messages: {
+  //         select: {
+  //           id: true,
+  //           content: true,
+  //           user_id: true,
+  //           sent_at: true,
+  //           type: true,
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 }

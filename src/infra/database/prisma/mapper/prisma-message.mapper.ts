@@ -4,7 +4,6 @@ import { User } from "src/core/entities/user";
 export class PrismamMessageMapper {
   public static toPrisma(message: Message) {
     return {
-      id: message.id,
       content: message.content,
       user_id: message.userId,
       conversation_id: message.conversationId,
