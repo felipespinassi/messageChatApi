@@ -47,22 +47,19 @@ export class PrismaConversationRepository implements ConversationRepository {
             },
           },
         },
-        messages: {
-          select: {
-            id: true,
-            content: true,
-            user_id: true,
-            sent_at: true,
-            type: true,
-          },
-        },
       },
     });
 
     if (rawConversations) {
-      return rawConversations.map((raw) =>
-        PrismaConversationMapper.toDomain(raw)
+      const conversations = await Promise.all(
+        rawConversations.map(async (raw) => {
+          const messages = await this.message.find({
+            conversation_id: raw?.id,
+          });
+          return PrismaConversationMapper.toDomain({ ...raw, messages });
+        })
       );
+      return conversations;
     }
     return null;
   }
@@ -129,8 +126,6 @@ export class PrismaConversationRepository implements ConversationRepository {
       ...conversation,
       messages,
     };
-
-    console.log(fullConversation);
 
     if (conversation) {
       return PrismaConversationMapper.toDomain(fullConversation);

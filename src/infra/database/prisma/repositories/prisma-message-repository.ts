@@ -23,12 +23,7 @@ export class PrismaMessageRepository implements MessageRepository {
 
     return null;
   }
-  async findAll(userId: any) {
-    return await this.message.create({
-      content: "felipe",
-      user_id: "1",
-      conversation_id: "1",
-      type: "text",
-    });
+  async findAll(conversationId: any) {
+    return await this.message.find({ conversation_id: conversationId }).exec();
   }
 }
