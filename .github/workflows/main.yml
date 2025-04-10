@@ -27,7 +27,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            rm -rf ~/messageChatApi
+           sudo rm -rf ~/messageChatApi
 
       # copiar codigo para dentro da digital ocean
       - name: Copy dist to AWS
