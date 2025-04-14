@@ -31,7 +31,8 @@ export class ConversationController {
 
     const newConversation = new ConversationDto(
       conversation.id,
-      conversation.isGroup
+      conversation.isGroup,
+      conversation.name
     );
 
     return newConversation;
@@ -49,5 +50,10 @@ export class ConversationController {
   @Get("user/:id")
   async findOneByUserId(@Req() req, @Param("id", ParseIntPipe) id: number) {
     return this.conversationService.findOneByUserId(req.user, id);
+  }
+
+  @Get(":id")
+  async findById(@Param("id") id: string) {
+    return this.conversationService.findById(id);
   }
 }

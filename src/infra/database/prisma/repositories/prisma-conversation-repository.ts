@@ -133,33 +133,37 @@ export class PrismaConversationRepository implements ConversationRepository {
 
     return null;
   }
-  // async findOneById(id: string): Promise<any | null> {
-  //   return await this.prismaService.conversation.findUnique({
-  //     where: {
-  //       id,
-  //     },
-  //     include: {
-  //       users: {
-  //         select: {
-  //           user: {
-  //             select: {
-  //               id: true,
-  //               name: true,
-  //               email: true,
-  //             },
-  //           },
-  //         },
-  //       },
-  //       messages: {
-  //         select: {
-  //           id: true,
-  //           content: true,
-  //           user_id: true,
-  //           sent_at: true,
-  //           type: true,
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
+  async findById(id: string): Promise<any | null> {
+    const rawConversation = await this.prismaService.conversation.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        users: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        messages: {
+          select: {
+            id: true,
+            content: true,
+            user_id: true,
+            sent_at: true,
+            type: true,
+          },
+        },
+      },
+    });
+    const messages = await this.message.find({
+      conversation_id: rawConversation?.id,
+    });
+    return PrismaConversationMapper.toDomain({ ...rawConversation, messages });
+  }
 }

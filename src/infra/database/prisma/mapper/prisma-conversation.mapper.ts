@@ -5,6 +5,7 @@ export class PrismaConversationMapper {
     return {
       id: conversation.id,
       is_group: conversation.isGroup,
+      name: conversation.name,
     };
   }
 
@@ -24,6 +25,7 @@ export class PrismaConversationMapper {
       users: rawConversation.users?.map((u) => u.user),
       createdAt: rawConversation.created_at,
       updatedAt: rawConversation.updated_at,
+      name: rawConversation.name,
     };
   }
 }

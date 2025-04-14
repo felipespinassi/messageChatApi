@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNumber } from "class-validator";
+import { IsBoolean, IsNumber, isString } from "class-validator";
 
 export class CreateConversationDto {
   @ApiProperty()
@@ -14,4 +14,7 @@ export class CreateConversationDto {
   })
   @IsNumber({}, { each: true })
   users: number[];
+
+  @ApiProperty()
+  name?: string;
 }

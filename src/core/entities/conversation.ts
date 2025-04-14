@@ -11,4 +11,5 @@ export class Conversation {
   ];
   createdAt: Date;
   updatedAt: Date;
+  name?: string;
 }

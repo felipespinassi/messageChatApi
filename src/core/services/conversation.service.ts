@@ -23,12 +23,13 @@ export class ConversationService {
       createConversationDto.users[1]
     );
 
-    if (conversationExists) {
+    if (conversationExists && !createConversationDto.isGroup) {
       throw new Error("Conversa já existe");
     }
 
     const conversation = new Conversation();
     conversation.isGroup = createConversationDto.isGroup;
+    conversation.name;
 
     const newConversation = await this.conversationRepository.create(
       conversation
@@ -99,8 +100,8 @@ export class ConversationService {
     };
   }
 
-  // async findOneById(id: string): Promise<any> {
-  //   const conversation = await this.conversationRepository.findOneById(id);
-  //   return conversation;
-  // }
+  async findById(id: string): Promise<any> {
+    const conversation = await this.conversationRepository.findById(id);
+    return conversation;
+  }
 }

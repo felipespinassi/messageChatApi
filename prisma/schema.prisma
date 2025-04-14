@@ -52,6 +52,7 @@ model Conversation {
   messages   Message[]
   is_group   Boolean
   users      ConversationUser[]
+  name       String?
 
   @@map("conversations")
 }
