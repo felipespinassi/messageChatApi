@@ -2,11 +2,11 @@ export class ConversationUserMessageDto {
   id: string;
   isGroup: boolean;
   message: {};
-  user: {
+  users: {
     id: number;
     name: string;
     email: string;
-  };
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }

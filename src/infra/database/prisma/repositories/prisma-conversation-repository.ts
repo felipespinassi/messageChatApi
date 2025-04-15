@@ -133,6 +133,7 @@ export class PrismaConversationRepository implements ConversationRepository {
 
     return null;
   }
+
   async findById(id: string): Promise<any | null> {
     const rawConversation = await this.prismaService.conversation.findUnique({
       where: {

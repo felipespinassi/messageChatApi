@@ -57,17 +57,16 @@ export class ConversationService {
     }
     return conversations
       .map((conversation) => {
-        const otherUser = conversation.users?.find(
-          (u) => u.id !== userFromToken.id
-        );
-        if (!otherUser) return null;
         return {
           id: conversation.id,
           createdAt: conversation.createdAt,
           updatedAt: conversation.updatedAt,
           isGroup: conversation.isGroup,
           message: conversation.messages?.pop() || {},
-          user: otherUser,
+          users:
+            conversation.users?.map((u) => {
+              return u;
+            }) || [],
         };
       })
       .filter((conversation) => conversation !== null);
@@ -92,11 +91,10 @@ export class ConversationService {
       updatedAt: conversation.updatedAt,
       isGroup: conversation.isGroup,
       messages: conversation.messages || [],
-      user: conversation.users?.find((u) => u.id === id) as {
-        id: number;
-        name: string;
-        email: string;
-      },
+      users:
+        conversation.users?.map((u) => {
+          return u;
+        }) || [],
     };
   }
 
