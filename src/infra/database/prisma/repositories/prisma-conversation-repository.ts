@@ -151,15 +151,6 @@ export class PrismaConversationRepository implements ConversationRepository {
             },
           },
         },
-        messages: {
-          select: {
-            id: true,
-            content: true,
-            user_id: true,
-            sent_at: true,
-            type: true,
-          },
-        },
       },
     });
     const messages = await this.message.find({

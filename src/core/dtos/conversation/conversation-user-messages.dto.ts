@@ -10,4 +10,5 @@ export class ConversationUserMessagesDto {
 
   createdAt: Date;
   updatedAt: Date;
+  name: string | null;
 }

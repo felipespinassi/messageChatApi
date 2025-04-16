@@ -67,6 +67,7 @@ export class ConversationService {
             conversation.users?.map((u) => {
               return u;
             }) || [],
+          name: conversation.name || null,
         };
       })
       .filter((conversation) => conversation !== null);
@@ -95,6 +96,7 @@ export class ConversationService {
         conversation.users?.map((u) => {
           return u;
         }) || [],
+      name: conversation.name || null,
     };
   }
 

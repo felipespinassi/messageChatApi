@@ -9,4 +9,5 @@ export class ConversationUserMessageDto {
   }[];
   createdAt: Date;
   updatedAt: Date;
+  name: string | null;
 }
