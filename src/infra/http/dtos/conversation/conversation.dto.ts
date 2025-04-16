@@ -10,8 +10,13 @@ export class ConversationDto {
   @IsBoolean()
   isGroup: boolean;
 
-  constructor(id: string, isGroup: boolean) {
+  @ApiProperty()
+  @IsString()
+  name?: string;
+
+  constructor(id: string, isGroup: boolean, name: string = "") {
     this.id = id;
     this.isGroup = isGroup;
+    this.name = name;
   }
 }

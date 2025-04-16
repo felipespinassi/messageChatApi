@@ -7,5 +7,5 @@ export abstract class ConversationRepository {
     userId1: number,
     userId2: number
   ): Promise<Conversation | null>;
-  // abstract findOneById(id: string): Promise<any | null>;
+  abstract findById(id: string): Promise<any | null>;
 }

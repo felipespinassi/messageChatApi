@@ -9,7 +9,10 @@ export class ConversationUserMessageDto {
   @ApiProperty()
   message: {};
   @ApiProperty()
-  user: {};
+  users: [];
+
+  @ApiProperty()
+  name: string;
 
   createdAt: Date;
   updatedAt: Date;
@@ -18,6 +21,7 @@ export class ConversationUserMessageDto {
     this.id = conversation.id;
     this.isGroup = conversation.isGroup;
     this.message = conversation.message;
-    this.user = conversation.users;
+    this.users = conversation.users;
+    this.name = conversation.name;
   }
 }
