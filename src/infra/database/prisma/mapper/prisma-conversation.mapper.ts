@@ -18,7 +18,7 @@ export class PrismaConversationMapper {
           id: message.id,
           content: message.content,
           userId: message.user_id,
-          sentAt: message.sent_at,
+          userName: message.user_name,
           type: message.type,
         };
       }),

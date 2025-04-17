@@ -12,4 +12,7 @@ export class CreateMessageDto {
 
   @ApiProperty()
   conversationId: string;
+
+  @ApiProperty()
+  userName: string;
 }

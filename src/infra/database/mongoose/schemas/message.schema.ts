@@ -19,6 +19,9 @@ export class Message {
   user_id: string;
 
   @Prop()
+  user_name: string;
+
+  @Prop()
   conversation_id: string;
 
   @Prop()

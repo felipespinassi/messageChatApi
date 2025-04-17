@@ -8,7 +8,7 @@ export class PrismamMessageMapper {
       user_id: message.userId,
       conversation_id: message.conversationId,
       type: message.type,
-      sent_at: message.sentAt || new Date(),
+      user_name: message.userName,
     };
   }
 
@@ -20,7 +20,7 @@ export class PrismamMessageMapper {
     message.userId = rawMessage.user_id;
     message.conversationId = rawMessage.conversation_id;
     message.type = rawMessage.type;
-    message.sentAt = rawMessage.sent_at;
+    message.userName = rawMessage.user_name;
     message.createdAt = rawMessage.created_at;
     message.updatedAt = rawMessage.updated_at;
 

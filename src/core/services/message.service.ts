@@ -14,7 +14,7 @@ export class MessageService {
     message.type = createConversationUserDto.type;
     message.userId = createConversationUserDto.userId;
     message.conversationId = createConversationUserDto.conversationId;
-    message.sentAt = new Date();
+    message.userName = createConversationUserDto.userName;
 
     const newMessage = await this.messageRepository.create(message);
 

@@ -47,6 +47,7 @@ export class ChatGateway
       userId: number;
       conversationId: string;
       type: string;
+      userName: string;
     },
     @ConnectedSocket() client: Socket
   ) {
@@ -58,6 +59,7 @@ export class ChatGateway
       conversationId: data.conversationId,
       userId: data.userId,
       type: data.type,
+      userName: data.userName,
     };
     const newMessage = await this.messageService.createMessage(messageDto);
 
