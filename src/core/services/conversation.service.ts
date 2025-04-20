@@ -55,6 +55,8 @@ export class ConversationService {
     if (!conversations) {
       throw new ConflictException("Conflito ao buscar conversas");
     }
+
+    console.log(conversations);
     return conversations
       .map((conversation) => {
         return {

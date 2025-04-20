@@ -20,6 +20,7 @@ export class PrismaConversationMapper {
           userId: message.user_id,
           userName: message.user_name,
           type: message.type,
+          createdAt: message.createdAt,
         };
       }),
       users: rawConversation.users?.map((u) => u.user),
