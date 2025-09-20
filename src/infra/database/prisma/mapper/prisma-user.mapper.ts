@@ -7,6 +7,8 @@ export class PrismaUserMapper {
       name: user.name,
       email: user.email,
       password: user.password,
+      type: user.type,
+      company_id: user.companyId,
     };
   }
 
@@ -19,6 +21,8 @@ export class PrismaUserMapper {
     user.password = rawUser.password;
     user.createdAt = rawUser.created_at;
     user.updatedAt = rawUser.updated_at;
+    user.type = rawUser.type;
+    user.companyId = rawUser.company_id;
 
     return user;
   }

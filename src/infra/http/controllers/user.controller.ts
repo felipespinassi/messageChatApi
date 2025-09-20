@@ -21,7 +21,13 @@ export class UserController {
   async createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     const newUser = await this.userService.createUser(createUserDto);
 
-    return new UserDto(newUser.id, newUser.name, newUser.email);
+    return new UserDto(
+      newUser.id,
+      newUser.name,
+      newUser.email,
+      newUser.type,
+      newUser.companyId
+    );
   }
 
   @Get()
@@ -29,7 +35,8 @@ export class UserController {
     const users = await this.userService.findAll();
 
     const usersDto = users.map(
-      (user) => new UserDto(user.id, user.email, user.name)
+      (user) =>
+        new UserDto(user.id, user.email, user.name, user.type, user.companyId)
     );
 
     return usersDto;
@@ -38,7 +45,13 @@ export class UserController {
   async findOneById(@Param("id", ParseIntPipe) id: number) {
     const user = await this.userService.findOneById(id);
 
-    const userDto = new UserDto(user.id, user.email, user.name);
+    const userDto = new UserDto(
+      user.id,
+      user.email,
+      user.name,
+      user.type,
+      user.companyId
+    );
     return userDto;
   }
 }

@@ -1,3 +1,5 @@
+import { UserType } from "../enums/userType";
+
 export class User {
   id: number;
   name: string;
@@ -5,4 +7,6 @@ export class User {
   password: string;
   createdAt: Date;
   updatedAt: Date;
+  type: UserType;
+  companyId: number;
 }

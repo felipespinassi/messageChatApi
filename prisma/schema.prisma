@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserType {
+  MANAGER
+  AGENT
+  CUSTOMER
+}
+
 model User {
   id            Int                @id @default(autoincrement())
   email         String             @unique
@@ -21,11 +27,11 @@ model User {
   phone_number  String?
   created_at    DateTime           @default(now())
   updated_at    DateTime           @updatedAt
-  type          String             @default("user")
+  type          UserType           @default(CUSTOMER)
   messages      Message[]
   conversations ConversationUser[]
   companies     Company?           @relation(fields: [company_id], references: [id])
-  company_id    Int?
+  company_id    Int
 
   @@map("users")
 }

@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { UserType } from "src/core/enums/userType";
 
 export class CreateUserDto {
   @ApiProperty()
@@ -9,4 +10,10 @@ export class CreateUserDto {
 
   @ApiProperty()
   password: string;
+
+  @ApiProperty({ enum: UserType })
+  type: UserType;
+
+  @ApiProperty()
+  companyId: number;
 }

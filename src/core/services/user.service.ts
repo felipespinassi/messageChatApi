@@ -22,6 +22,8 @@ export class UserService {
 
     user.name = createUserDto.name;
     user.email = createUserDto.email;
+    user.type = createUserDto.type;
+    user.companyId = createUserDto.companyId;
     user.password = hashPass;
 
     const newUser = await this.userRepository.create(user);
