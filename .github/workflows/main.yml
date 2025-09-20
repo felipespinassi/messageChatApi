@@ -11,15 +11,27 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      # instalar dependencias npm/yarn
+      # instalar dependências npm/yarn
       - name: Install dependencies
         run: yarn
       
       # executar build   
       - name: Run build
         run: yarn build
-    
-      # copiar codigo para dentro da digital ocean
+
+      # limpar a pasta remota antes de copiar
+      - name: Clean remote folder
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # garante que o usuário tem permissão
+            mkdir -p ~/messageChatApi
+            rm -rf ~/messageChatApi/*
+
+      # copiar código para o servidor
       - name: Copy dist to AWS
         uses: appleboy/scp-action@master
         with:
@@ -30,7 +42,7 @@ jobs:
           target: "~/messageChatApi"
           timeout: 120s
     
-      # run productions scripts
+      # rodar scripts de produção
       - name: Install dependencies on AWS
         uses: appleboy/ssh-action@master
         with:
