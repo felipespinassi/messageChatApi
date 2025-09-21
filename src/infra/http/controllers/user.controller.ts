@@ -10,13 +10,11 @@ import {
 import { UserService } from "src/core/services/user.service";
 import { CreateUserDto } from "../dtos/user/create-user.dto";
 import { UserDto } from "../dtos/user/user.dto";
-import { Public } from "../decorators/public.decorator";
 
 @Controller("/users")
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Public()
   @Post()
   async createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     const newUser = await this.userService.createUser(createUserDto);
