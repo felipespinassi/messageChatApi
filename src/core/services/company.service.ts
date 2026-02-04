@@ -20,10 +20,9 @@ export class CompanyService {
   async create(companyDto: CreateCompanyDto): Promise<Company> {
     const company = new Company();
 
-    const hashPass = await bcrypt.hash(companyDto.password, this.saltOrRounds);
     company.name = companyDto.name;
     company.email = companyDto.email;
-    company.password = hashPass;
+    company.password = companyDto.password;
     company.document = companyDto.document;
 
     const newCompany = await this.companyRepository.create(company);
