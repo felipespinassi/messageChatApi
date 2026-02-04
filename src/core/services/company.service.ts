@@ -8,20 +8,22 @@ import { Company } from "../entities/company";
 import { CreateCompanyDto } from "../dtos/company/create-company.dto";
 import { UserService } from "./user.service";
 import { UserType } from "../enums/userType";
-
+import * as bcrypt from "bcrypt";
 @Injectable()
 export class CompanyService {
   constructor(
     private companyRepository: CompanyRepository,
-    private userSevice: UserService
+    private userSevice: UserService,
   ) {}
+  saltOrRounds = 10;
 
   async create(companyDto: CreateCompanyDto): Promise<Company> {
     const company = new Company();
 
+    const hashPass = await bcrypt.hash(companyDto.password, this.saltOrRounds);
     company.name = companyDto.name;
     company.email = companyDto.email;
-    company.password = companyDto.password;
+    company.password = hashPass;
     company.document = companyDto.document;
 
     const newCompany = await this.companyRepository.create(company);
