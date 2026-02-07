@@ -17,7 +17,7 @@ export class UserService {
     const user = new User();
     const hashPass = await bcrypt.hash(
       createUserDto.password,
-      this.saltOrRounds
+      this.saltOrRounds,
     );
 
     user.name = createUserDto.name;
@@ -35,13 +35,13 @@ export class UserService {
     return newUser;
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(user): Promise<User[]> {
     const users = await this.userRepository.findAll();
 
     if (!users) {
       throw new NotFoundException("Nenhum usuário encontrado");
     }
-    return users;
+    return users.filter((u) => u.email !== user.email);
   }
 
   async findOneByEmail(email: string): Promise<User> {

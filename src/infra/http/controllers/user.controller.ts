@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Req,
   ValidationPipe,
 } from "@nestjs/common";
 import { UserService } from "src/core/services/user.service";
@@ -24,17 +25,16 @@ export class UserController {
       newUser.name,
       newUser.email,
       newUser.type,
-      newUser.companyId
+      newUser.companyId,
     );
   }
 
   @Get()
-  async findAll() {
-    const users = await this.userService.findAll();
-
+  async findAll(@Req() req) {
+    const users = await this.userService.findAll(req.user);
     const usersDto = users.map(
       (user) =>
-        new UserDto(user.id, user.email, user.name, user.type, user.companyId)
+        new UserDto(user.id, user.email, user.name, user.type, user.companyId),
     );
 
     return usersDto;
@@ -48,7 +48,7 @@ export class UserController {
       user.email,
       user.name,
       user.type,
-      user.companyId
+      user.companyId,
     );
     return userDto;
   }
