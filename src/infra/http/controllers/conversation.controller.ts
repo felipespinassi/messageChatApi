@@ -23,16 +23,18 @@ export class ConversationController {
   @ApiOkResponse({ type: ConversationDto })
   @Post()
   async createConversation(
-    @Body(new ValidationPipe()) createConversationDto: CreateConversationDto
+    @Body(new ValidationPipe()) createConversationDto: CreateConversationDto,
+    @Req() req,
   ) {
     const conversation = await this.conversationService.create(
-      createConversationDto
+      createConversationDto,
+      req.user,
     );
 
     const newConversation = new ConversationDto(
       conversation.id,
       conversation.isGroup,
-      conversation.name
+      conversation.name,
     );
 
     return newConversation;

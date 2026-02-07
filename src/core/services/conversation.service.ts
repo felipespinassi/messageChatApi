@@ -12,15 +12,17 @@ export class ConversationService {
   constructor(
     private conversationRepository: ConversationRepository,
     private conversationUserService: ConversationUserService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   async create(
-    createConversationDto: CreateConversationDto
+    createConversationDto: CreateConversationDto,
+    user,
   ): Promise<Conversation> {
+    const userIds = [...createConversationDto.users, user.id];
     const conversationExists = await this.conversationRepository.findByUserIds(
-      createConversationDto.users[0],
-      createConversationDto.users[1]
+      userIds[0],
+      userIds[1],
     );
 
     if (conversationExists && !createConversationDto.isGroup) {
@@ -33,16 +35,15 @@ export class ConversationService {
 
     console.log(conversation);
 
-    const newConversation = await this.conversationRepository.create(
-      conversation
-    );
+    const newConversation =
+      await this.conversationRepository.create(conversation);
 
     if (!newConversation) {
       throw new ConflictException("Conflito ao criar nova conversa");
     }
 
     await this.conversationUserService.create({
-      users: createConversationDto.users,
+      users: userIds,
       conversationId: newConversation.id,
     });
 
@@ -51,7 +52,7 @@ export class ConversationService {
 
   async findAll(userFromToken: any): Promise<ConversationUserMessageDto[]> {
     const conversations = await this.conversationRepository.findAll(
-      userFromToken.id
+      userFromToken.id,
     );
 
     if (!conversations) {
@@ -79,11 +80,11 @@ export class ConversationService {
 
   async findOneByUserId(
     userFromToken,
-    id: number
+    id: number,
   ): Promise<ConversationUserMessagesDto> {
     const conversation = await this.conversationRepository.findByUserIds(
       userFromToken.id,
-      id
+      id,
     );
 
     if (!conversation) {
