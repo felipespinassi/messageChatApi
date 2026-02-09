@@ -49,10 +49,10 @@ export class ChatGateway
       type: string;
       userName: string;
     },
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ) {
     this.logger.log(
-      `Message: ${data.content} from client id: ${client.id} to room: ${data.room}`
+      `Message: ${data.content} from client id: ${client.id} to room: ${data.room}`,
     );
     const messageDto = {
       content: data.content,
@@ -61,15 +61,15 @@ export class ChatGateway
       type: data.type,
       userName: data.userName,
     };
-    const newMessage = await this.messageService.createMessage(messageDto);
 
-    this.server.to(data.room).emit("onMessage", newMessage);
+    this.server.to(data.room).emit("onMessage", messageDto);
+    const newMessage = await this.messageService.createMessage(messageDto);
   }
 
   @SubscribeMessage("joinRoom")
   handleJoinRoom(
     @MessageBody() room: string,
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ) {
     client.join(room);
     client.emit("joinedRoom", room);
@@ -79,7 +79,7 @@ export class ChatGateway
   @SubscribeMessage("leaveRoom")
   handleLeaveRoom(
     @MessageBody() room: string,
-    @ConnectedSocket() client: Socket
+    @ConnectedSocket() client: Socket,
   ) {
     client.leave(room);
     client.emit("leftRoom", room);
